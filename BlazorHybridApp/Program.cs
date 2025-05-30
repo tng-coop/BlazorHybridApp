@@ -39,6 +39,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityEmailSender>();
+builder.Services.AddHttpClient<PexelsClient>();
 
 var app = builder.Build();
 
@@ -68,6 +69,14 @@ app.UseHttpsRedirection();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+
+app.MapGet("/api/waterfall", async (PexelsClient client, CancellationToken ct) =>
+{
+    const int videoId = 6394054;
+    var (data, contentType) = await client.GetVideoThumbnailAsync(videoId, ct);
+    return Results.File(data, contentType);
+});
+
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(BlazorHybridApp.Client._Imports).Assembly);

@@ -20,7 +20,7 @@ body::after {
     right: 0;
     bottom: 0;
     height: 30vh;
-    background-image: url('media/waterfall.png');
+    background-image: url('/api/waterfall');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center bottom;

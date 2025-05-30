@@ -1,2 +1,11 @@
-We have cert files such as these here
-aspnet.lan-ca.crt  aspnet.lan-ca.key  aspnet.lan-ca.srl  aspnet.lan.crt  aspnet.lan.csr  aspnet.lan.ext  aspnet.lan.key  aspnet.lan.pem  aspnet.lan.pfx
+# BlazorHybridApp
+
+This sample demonstrates a hybrid Blazor app. Some scripts expect a Pexels API key to download the waterfall image shown in the UI.
+
+Set the key in configuration (e.g. `Pexels:ApiKey` in `appsettings.json`) or via an environment variable:
+
+```bash
+export Pexels__ApiKey="<your Pexels API key>"
+```
+
+The `Program` exposes `/api/waterfall` which fetches the video thumbnail from Pexels using this key.
