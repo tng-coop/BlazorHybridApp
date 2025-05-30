@@ -25,6 +25,7 @@
     let index = 0;
 
     let startTime = null;
+    let playbacks = 0;
 
     async function playCurrent() {
         const current = playlist[index];
@@ -36,11 +37,12 @@
 
                 video.src = src;
                 video.poster = current.poster;
-                video.loop = true;
+                video.loop = false; // handle looping manually to track playbacks
                 await video.play();
                 startTime = Date.now();
+                playbacks++;
                 if (info) {
-                    info.textContent = `URL: ${video.src} (0s)`;
+                    info.textContent = `URL: ${video.src} (${playbacks}) (0s)`;
                 }
                 return;
             } catch (e) {
@@ -58,15 +60,25 @@
         setInterval(() => {
             if (startTime !== null) {
                 const seconds = Math.floor((Date.now() - startTime) / 1000);
-                info.textContent = `URL: ${video.src} (${seconds}s)`;
+                info.textContent = `URL: ${video.src} (${playbacks}) (${seconds}s)`;
             }
         }, 1000);
     }
 
     video.addEventListener('ended', async () => {
-        index++;
-        if (index < playlist.length) {
+        if (index + 1 < playlist.length) {
+            index++;
             await playCurrent();
+            return;
         }
+
+        // Current video is looping
+        video.currentTime = 0;
+        startTime = Date.now();
+        playbacks++;
+        if (info) {
+            info.textContent = `URL: ${video.src} (${playbacks}) (0s)`;
+        }
+        await video.play();
     });
 })();
