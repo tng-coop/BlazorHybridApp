@@ -1,4 +1,5 @@
-(function () {
+
+(async function () {
     const video = document.getElementById('waterfall-video-background');
     if (!video) return;
 
@@ -9,22 +10,34 @@
     // Safari may ignore the autoplay attribute until play() is called
     video.play().catch(() => {});
 
+    async function getVideoUrl(api) {
+        const resp = await fetch(api);
+        if (!resp.ok) throw new Error('Failed to fetch video url');
+        const data = await resp.json();
+        return data.url;
+    }
+
     const playlist = [
-        { src: '/api/waterfall-video', poster: '/api/waterfall' },
-        { src: '/api/goat-video', poster: '/api/goat' }
+        { api: '/api/waterfall-video-url', poster: '/api/waterfall' },
+        { api: '/api/goat-video-url', poster: '/api/goat' }
     ];
     let index = 0;
 
-    function playNext() {
-        index++;
-        if (index < playlist.length) {
-            const next = playlist[index];
-            video.src = next.src;
-            video.poster = next.poster;
-            video.loop = true;
-            video.play();
-        }
+    async function playCurrent() {
+        const current = playlist[index];
+        const src = await getVideoUrl(current.api);
+        video.src = src;
+        video.poster = current.poster;
+        video.loop = true;
+        await video.play();
     }
 
-    video.addEventListener('ended', playNext);
+    await playCurrent();
+
+    video.addEventListener('ended', async () => {
+        index++;
+        if (index < playlist.length) {
+            await playCurrent();
+        }
+    });
 })();

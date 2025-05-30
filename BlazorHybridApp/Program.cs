@@ -98,6 +98,20 @@ app.MapGet("/api/goat-video", async (PexelsClient client, CancellationToken ct) 
     return Results.File(data, contentType);
 });
 
+app.MapGet("/api/waterfall-video-url", async (PexelsClient client, CancellationToken ct) =>
+{
+    const int videoId = 6394054;
+    var url = await client.GetVideoUrlAsync(videoId, ct);
+    return Results.Json(new { url });
+});
+
+app.MapGet("/api/goat-video-url", async (PexelsClient client, CancellationToken ct) =>
+{
+    const int videoId = 30646036;
+    var url = await client.GetVideoUrlAsync(videoId, ct);
+    return Results.Json(new { url });
+});
+
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(BlazorHybridApp.Client._Imports).Assembly);
