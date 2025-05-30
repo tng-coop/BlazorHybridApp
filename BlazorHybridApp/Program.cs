@@ -77,6 +77,13 @@ app.MapGet("/api/waterfall", async (PexelsClient client, CancellationToken ct) =
     return Results.File(data, contentType);
 });
 
+app.MapGet("/api/waterfall-video", async (PexelsClient client, CancellationToken ct) =>
+{
+    const int videoId = 6394054;
+    var (data, contentType) = await client.GetVideoAsync(videoId, ct);
+    return Results.File(data, contentType);
+});
+
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(BlazorHybridApp.Client._Imports).Assembly);

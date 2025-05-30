@@ -9,3 +9,4 @@ export Pexels__ApiKey="<your Pexels API key>"
 ```
 
 The `Program` exposes `/api/waterfall` which fetches the video thumbnail from Pexels using this key.
+It also exposes `/api/waterfall-video` which streams the full video for display in the home page.
