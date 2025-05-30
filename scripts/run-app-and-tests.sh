@@ -23,7 +23,7 @@ cleanup() {
 trap cleanup SIGINT SIGTERM
 
 # Validate required files
-cd "$scriptdir/../BlazorWebApp"
+cd "$scriptdir/../BlazorHybridApp"
 for file in Program.cs *.csproj Properties/launchSettings.json appsettings.Development.json; do
   [[ -f "$file" ]] || { echo "❌ Required file '$file' missing."; exit 1; }
 done
@@ -33,7 +33,7 @@ chmod +x "$scriptdir/reset-db.sh"
 "$scriptdir/reset-db.sh"
 
 # Run xUnit tests explicitly before starting the app
-cd "$scriptdir/../BlazorWebApp.Tests"
+cd "$scriptdir/../BlazorHybridApp.Tests"
 if dotnet test; then
     echo "✅ xUnit tests passed."
 else
@@ -41,7 +41,7 @@ else
     cleanup 1
 fi
 
-cd "$scriptdir/../BlazorWebApp"
+cd "$scriptdir/../BlazorHybridApp"
 
 # ─── Determine APP_URL from env-var or user-secrets (or fail) ───
 if [ -n "$Kestrel__Endpoints__Https__Url" ]; then

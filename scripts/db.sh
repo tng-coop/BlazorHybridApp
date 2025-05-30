@@ -3,7 +3,7 @@ set -euo pipefail
 
 # set scriptdir
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR/../BlazorWebApp" || exit 1
+cd "$SCRIPT_DIR/../BlazorHybridApp" || exit 1
 
 
 # db.sh: Dump or restore PostgreSQL databases for local and Neon environments.

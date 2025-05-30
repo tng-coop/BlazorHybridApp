@@ -9,7 +9,7 @@ set -e  # Exit on error
 # Run the clearing script
 $scriptdir/clear-db.sh
 
-cd $scriptdir/../BlazorWebApp
+cd $scriptdir/../BlazorHybridApp
 # Apply Entity Framework migrations
 dotnet ef database update
 

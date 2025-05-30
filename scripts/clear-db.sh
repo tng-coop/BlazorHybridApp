@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Navigate to the script directory and into the BlazorWebApp project
+# Navigate to the script directory and into the BlazorHybridApp project
 scriptdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$scriptdir/../BlazorWebApp" || exit 1
+cd "$scriptdir/../BlazorHybridApp" || exit 1
 set -e  # Exit on error
 
 # --- Configuration ---

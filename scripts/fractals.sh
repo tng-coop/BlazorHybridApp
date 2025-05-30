@@ -3,7 +3,7 @@ set -e
 
 #set scriptdir
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR/../BlazorWebApp" || exit 1
+cd "$SCRIPT_DIR/../BlazorHybridApp" || exit 1
 
 # A script to generate 10 plasma-based fractal images named fractal_0.png through fractal_9.png
 

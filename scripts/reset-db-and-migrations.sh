@@ -7,11 +7,11 @@ set -e  # Exit on error
 $scriptdir/clear-db.sh
 
 # Remove old migrations
-if [ -d "$scriptdir/../BlazorWebApp/Migrations" ]; then
-  rm -rf $scriptdir/../BlazorWebApp/Migrations
+if [ -d "$scriptdir/../BlazorHybridApp/Migrations" ]; then
+  rm -rf $scriptdir/../BlazorHybridApp/Migrations
   echo "✅ Old migrations directory removed."
 fi
-cd $scriptdir/../BlazorWebApp
+cd $scriptdir/../BlazorHybridApp
 # Create new migration
 dotnet ef migrations add InitialCreate
 echo "✅ New migration created."

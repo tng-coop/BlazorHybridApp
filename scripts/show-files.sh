@@ -47,7 +47,7 @@ if $all; then
 else
   # directories to prune
   skip_dirs=(.git published node_modules logs docs \
-             BlazorWebApp.Tests \
+             BlazorHybridApp.Tests \
              Migrations \
              bin out obj PlaywrightTests asset migration wwwroot)
 
