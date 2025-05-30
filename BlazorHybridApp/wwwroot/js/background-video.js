@@ -2,6 +2,13 @@
     const video = document.getElementById('waterfall-video-background');
     if (!video) return;
 
+    // Enable inline playback on iOS Safari and attempt to start the clip
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+    video.playsInline = true;
+    // Safari may ignore the autoplay attribute until play() is called
+    video.play().catch(() => {});
+
     const playlist = [
         { src: '/api/waterfall-video', poster: '/api/waterfall' },
         { src: '/api/goat-video', poster: '/api/goat' }
