@@ -60,6 +60,7 @@ jobs:
 
       - name: Restore dotnet
         run: dotnet tool restore
+        working-directory: ./BlazorHybridApp
 
       - name: Reset database and apply migrations
         run: ./scripts/reset-db.sh
