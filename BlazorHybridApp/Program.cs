@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 using BlazorHybridApp.Client.Pages;
 using BlazorHybridApp.Components;
 using BlazorHybridApp.Components.Account;
 using BlazorHybridApp.Data;
+using BlazorHybridApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,7 +37,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
-builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
+builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityEmailSender>();
 
 var app = builder.Build();
 
