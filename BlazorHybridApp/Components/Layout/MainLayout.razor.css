@@ -4,6 +4,18 @@
     flex-direction: column;
 }
 
+#waterfall-video-background {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 30vh;
+    width: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    z-index: -1;
+}
+
 main {
     flex: 1;
 }
