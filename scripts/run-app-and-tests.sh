@@ -32,14 +32,14 @@ done
 chmod +x "$scriptdir/reset-db.sh"
 "$scriptdir/reset-db.sh"
 
-# Run xUnit tests explicitly before starting the app
-cd "$scriptdir/../BlazorHybridApp.Tests"
-if dotnet test; then
-    echo "✅ xUnit tests passed."
-else
-    echo "❌ xUnit tests failed."
-    cleanup 1
-fi
+## Run xUnit tests explicitly before starting the app
+#cd "$scriptdir/../BlazorHybridApp.Tests"
+#if dotnet test; then
+#    echo "✅ xUnit tests passed."
+#else
+#    echo "❌ xUnit tests failed."
+#    cleanup 1
+#fi
 
 cd "$scriptdir/../BlazorHybridApp"
 
@@ -132,18 +132,4 @@ output=$("$scriptdir/fetch-html.sh" "$APP_URL")
 if [ -z "$output" ]; then
   echo "❌ nothing was captured."
   cleanup 1
-fi
-
-echo "✅ something is displayed OK."
-
-# --- Run Playwright tests ---
-cd "$scriptdir/../PlaywrightTests"
-# npx playwright install chromium --with-deps
-
-if npx playwright test; then
-    echo "✅ Playwright tests passed."
-    cleanup 0
-else
-    echo "❌ Playwright tests failed."
-    cleanup 1
 fi

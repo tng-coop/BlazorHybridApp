@@ -1,0 +1,7 @@
+{
+  "devDependencies": {
+    "@playwright/test": "^1.50.1",
+    "chrome-remote-interface": "^0.33.3",
+    "maildev": "^2.2.1"
+  }
+}

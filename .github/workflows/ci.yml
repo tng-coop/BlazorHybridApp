@@ -1,0 +1,125 @@
+name: Setup HTTPS Certificates and Database
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - 'docs/**'
+
+jobs:
+  setup-https-and-db:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Map aspnet.lan to 127.0.0.1
+        run: echo "127.0.0.1 aspnet.lan" | sudo tee -a /etc/hosts
+
+      - name: Install PostgreSQL client and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client libnss3-tools
+
+      - name: Wait for PostgreSQL
+        run: |
+          until pg_isready -h 127.0.0.1 -p 5432 -U postgres; do
+            echo "Waiting for Postgres..."
+            sleep 2
+          done
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.x'
+
+      - name: Install dotnet-ef CLI
+        run: dotnet tool install --global dotnet-ef
+
+      - name: Add dotnet tools to PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Add dotnet tools to PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+      
+      - name: Make reset-db.sh executable
+        run: chmod +x ./scripts/reset-db.sh
+
+      - name: Restore dotnet
+        run: dotnet tool restore
+
+      - name: Reset database and apply migrations
+        run: ./scripts/reset-db.sh
+
+      - name: Set up Google Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 'latest'
+          install-dependencies: true
+
+      - name: setup https certificates
+        run: |
+          chmod +x ./scripts/generate-ca-and-certs.sh
+          ./scripts/generate-ca-and-certs.sh
+      
+      - name: Fix permissions for certs
+        run: |
+          sudo chown -R $USER:$USER /srv
+          find /srv/ -type d -exec chmod 755 {} \;
+          find /srv/ -type f -exec chmod 644 {} \;
+
+
+      - name: Check cert file is readable
+        run: |
+          cat /srv/shared/aspnet/cert/aspnet.lan-ca.crt
+
+      - name: run tests
+        env:
+          Kestrel__Endpoints__Http__Url: "http://aspnet.lan:5000"
+          Kestrel__Endpoints__Https__Url: "https://aspnet.lan:5001"
+          Authentication__GitHub__ClientId: ${{ secrets.AUTH_GITHUB_CLIENT_ID }}
+          Authentication__GitHub__ClientSecret: ${{ secrets.AUTH_GITHUB_CLIENT_SECRET }}
+          Authentication__LINE__ClientId: ${{ secrets.AUTH_LINE_CLIENT_ID }}
+          Authentication__LINE__ClientSecret: ${{ secrets.AUTH_LINE_CLIENT_SECRET }}
+          Authentication__GOOGLE__ClientId: ${{ secrets.AUTH_GOOGLE_CLIENT_ID }}
+          Authentication__GOOGLE__ClientSecret: ${{ secrets.AUTH_GOOGLE_CLIENT_SECRET }}
+          JwtSettings__PrivateKeyBase64: ${{ secrets.JWTSETTINGS_PRIVATE_KEY }}
+          DefaultUser__Password: ${{ secrets.DEFAULTUSER_PASSWORD }}
+          
+          
+        run: |
+          chmod +x ./scripts/run-app-and-tests.sh
+          bash -vx ./scripts/run-app-and-tests.sh
+
+      - name: Display All Log Files Content
+        run: |
+          echo "=== Listing all log files ==="
+          ls -lah logs
+          echo "=== Log file contents ==="
+          for file in logs/*; do
+            echo -e "\n===== Contents of $file =====\n"
+            cat "$file"
+          done
+
+      - name: Upload Logs Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs
+          path: logs/
+        if: always()
+          
