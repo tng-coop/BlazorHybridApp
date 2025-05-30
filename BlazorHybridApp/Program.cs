@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents()
     .AddAuthenticationStateSerialization();
 
@@ -85,6 +86,7 @@ app.MapGet("/api/goat-video-url", async (PexelsClient client, CancellationToken 
 });
 
 app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode() 
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(BlazorHybridApp.Client._Imports).Assembly);
 
