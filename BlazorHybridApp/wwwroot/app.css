@@ -3,10 +3,29 @@ html, body {
 }
 
 body {
-    background-image: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url('media/fractal_0.png');
+    background-image:
+        linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
+        url('media/fractal_0.png');
     background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
+    position: relative;
+}
+
+/* Display a waterfall image at the bottom of the fractal background */
+body::after {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 30vh;
+    background-image: url('media/waterfall.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    pointer-events: none;
+    z-index: -1;
 }
 
 a, .btn-link {
