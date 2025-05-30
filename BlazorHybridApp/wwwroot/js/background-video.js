@@ -66,19 +66,9 @@
     }
 
     video.addEventListener('ended', async () => {
-        if (index + 1 < playlist.length) {
-            index++;
-            await playCurrent();
-            return;
-        }
-
-        // Current video is looping
-        video.currentTime = 0;
-        startTime = Date.now();
-        playbacks++;
-        if (info) {
-            info.textContent = `URL: ${video.src} (${playbacks}) (0s)`;
-        }
-        await video.play();
+        // Advance the playlist index and wrap back to the first item when we
+        // reach the end so the videos cycle correctly.
+        index = (index + 1) % playlist.length;
+        await playCurrent();
     });
 })();
