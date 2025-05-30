@@ -1,0 +1,76 @@
+# Bash completion for db.sh (dump|restore local|neon with optional flags)
+# Supports:
+#   -e|--env <0-9>    (local only)
+#   -f|--file <file>  (both targets)
+# and suggests dump filenames sorted newest-first.
+
+_db_sh() {
+    local cur prev cmd target dump_dir files envs opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    cmd="${COMP_WORDS[1]}"
+    target="${COMP_WORDS[2]}"
+
+    # first argument: dump|restore
+    if (( COMP_CWORD == 1 )); then
+        COMPREPLY=( $(compgen -W "dump restore" -- "$cur") )
+        return
+    fi
+    # second argument: local|neon
+    if (( COMP_CWORD == 2 )); then
+        COMPREPLY=( $(compgen -W "local neon" -- "$cur") )
+        return
+    fi
+
+    # environment numbers for -e/--env
+    envs="0 1 2 3 4 5 6 7 8 9"
+    # option flags
+    opts="-e --env -f --file"
+
+    # if previous is an option flag requiring an argument
+    case "$prev" in
+      -e|--env)
+        COMPREPLY=( $(compgen -W "$envs" -- "$cur") )
+        return
+        ;;
+      -f|--file)
+        ;;  # handled below by filename logic
+    esac
+
+    # determine dump directory
+    dump_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../dumps" && pwd)"
+
+    # helper: suggest dump files
+    _suggest_files() {
+        files=()
+        for f in "$dump_dir"/*.sql; do
+            [[ -e "$f" ]] || continue
+            files+=("$(basename "$f")")
+        done
+        IFS=$'\n' files=( $(printf "%s\n" "${files[@]}" | sort -r) )
+        unset IFS
+        COMPREPLY=( $(compgen -W "${files[*]}" -- "$cur") )
+    }
+
+    # if completing after -f/--file or if current word doesn't start with -
+    if [[ "$prev" == -f || "$prev" == --file || "$cur" != -* ]]; then
+        _suggest_files
+        return
+    fi
+
+    # otherwise, suggest flags based on target
+    case "$target" in
+      local)
+        COMPREPLY=( $(compgen -W "$opts" -- "$cur") )
+        ;;
+      neon)
+        COMPREPLY=( $(compgen -W "-f --file" -- "$cur") )
+        ;;
+    esac
+}
+
+# register for scripts
+complete -F _db_sh db.sh
+complete -F _db_sh scripts/db.sh
+complete -F _db_sh ./scripts/db.sh
