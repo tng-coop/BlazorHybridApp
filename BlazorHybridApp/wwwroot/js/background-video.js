@@ -25,11 +25,24 @@
 
     async function playCurrent() {
         const current = playlist[index];
-        const src = await getVideoUrl(current.api);
-        video.src = src;
-        video.poster = current.poster;
-        video.loop = true;
-        await video.play();
+        const maxRetries = 3;
+        for (let attempt = 0; attempt < maxRetries; attempt++) {
+            try {
+                const src = await getVideoUrl(current.api);
+                if (!src) throw new Error('Empty video url');
+
+                video.src = src;
+                video.poster = current.poster;
+                video.loop = true;
+                await video.play();
+                return;
+            } catch (e) {
+                console.log('Video playback error', e);
+                if (attempt < maxRetries - 1) {
+                    await new Promise(r => setTimeout(r, 1000));
+                }
+            }
+        }
     }
 
     await playCurrent();
