@@ -3,9 +3,7 @@ name: Setup HTTPS Certificates and Database
 on:
   push:
     branches:
-      - master
-    paths-ignore:
-      - 'docs/**'
+      - main
 
 jobs:
   setup-https-and-db:
