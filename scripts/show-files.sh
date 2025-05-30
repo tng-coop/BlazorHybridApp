@@ -48,7 +48,7 @@ else
   # directories to prune
   skip_dirs=(.git published node_modules logs docs \
              BlazorHybridApp.Tests \
-             Migrations \
+             Data/Migrations \
              bin out obj PlaywrightTests asset migration wwwroot)
 
   prune_clause=()

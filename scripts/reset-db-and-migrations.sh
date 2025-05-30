@@ -6,9 +6,9 @@ set -e  # Exit on error
 
 $scriptdir/clear-db.sh
 
-# Remove old migrations
-if [ -d "$scriptdir/../BlazorHybridApp/Migrations" ]; then
-  rm -rf $scriptdir/../BlazorHybridApp/Migrations
+# Remove old migrations (EF migrations live under Data/Migrations)
+if [ -d "$scriptdir/../BlazorHybridApp/Data/Migrations" ]; then
+  rm -rf "$scriptdir/../BlazorHybridApp/Data/Migrations"
   echo "✅ Old migrations directory removed."
 fi
 cd $scriptdir/../BlazorHybridApp
