@@ -518,3 +518,4 @@ filecache
 /BlazorWebApp/wwwroot/lib/bootstrap-icons/*
 
 /MyMudServerApp/*
+BlazorHybridApp/Data/app.db
