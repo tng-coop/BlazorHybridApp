@@ -8,5 +8,5 @@ Set the key in configuration (e.g. `Pexels:ApiKey` in `appsettings.json`) or via
 export Pexels__ApiKey="<your Pexels API key>"
 ```
 
-The `Program` exposes `/api/waterfall` which fetches the video thumbnail from Pexels using this key.
+The `Program` exposes `/api/waterfall` which fetches the video thumbnail from Pexels using this key. This image is used as the poster for the background video so the first frame loads instantly.
 It also exposes `/api/waterfall-video` which streams the full video for display in the home page.
