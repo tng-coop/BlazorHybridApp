@@ -1,0 +1,22 @@
+@page "/d3"
+
+<PageTitle>D3 Demo</PageTitle>
+
+<h1>D3 Demo</h1>
+
+<div id="d3-container"></div>
+
+<script src="lib/d3/dist/d3.min.js"></script>
+<script src="js/d3demo.js"></script>
+
+@code {
+    [Inject] IJSRuntime JSRuntime { get; set; } = default!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("d3Demo.init");
+        }
+    }
+}
