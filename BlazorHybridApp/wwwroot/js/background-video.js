@@ -25,7 +25,7 @@
 
     async function playCurrent() {
         const current = playlist[index];
-        const maxRetries = 3;
+        const maxRetries = 9;
         for (let attempt = 0; attempt < maxRetries; attempt++) {
             try {
                 const src = await getVideoUrl(current.api);
