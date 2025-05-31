@@ -1,0 +1,25 @@
+.background-video {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 30vh;
+    width: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    z-index: -1;
+    background-color: black;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#video-info {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    padding: 0.25rem 0.5rem;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 0.9rem;
+    z-index: 1;
+}
