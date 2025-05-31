@@ -13,14 +13,11 @@
         <article class="content px-4">
             @Body
         </article>
-    </main>
+
+</main>
 </div>
 
-<video id="background-video-1" class="background-video" autoplay muted preload="auto" playsinline></video>
-<video id="background-video-2" class="background-video" autoplay muted preload="auto" playsinline></video>
-<div id="video-info"></div>
-
-<script src="js/background-video.js"></script>
+<BackgroundVideo @rendermode="InteractiveServer" />
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.
