@@ -19,8 +19,8 @@
     }
 
     const playlist = [
-        { api: '/api/waterfall-video-url', poster: '/api/waterfall' },
-        { api: '/api/goat-video-url', poster: '/api/goat' }
+        { api: '/api/waterfall-video-url' },
+        { api: '/api/goat-video-url' }
     ];
     let index = 0;
 
