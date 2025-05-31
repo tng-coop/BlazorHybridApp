@@ -16,6 +16,20 @@
     </main>
 </div>
 
+@code {
+    [Inject] IJSRuntime JSRuntime { get; set; } = default!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("startBackgroundVideos");
+        }
+    }
+}
+
+<video id="background-video-1" class="background-video" autoplay muted preload="auto" playsinline></video>
+<video id="background-video-2" class="background-video" autoplay muted preload="auto" playsinline></video>
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.
