@@ -21,8 +21,8 @@
     }
 
     const playlist = [
-        { api: '/api/waterfall-video-url' },
-        { api: '/api/goat-video-url' }
+        { api: '/api/waterfall-video-url', url: null },
+        { api: '/api/goat-video-url', url: null }
     ];
     let index = 0; // currently playing playlist index
     let nextIndex = 1;
@@ -32,9 +32,25 @@
     let startTime = null;
     let playbacks = 0;
 
-    async function preload(video, api) {
-        const src = await getVideoUrl(api);
-        if (!src) throw new Error('Empty video url');
+    async function getCachedVideoUrl(idx, retries = 3) {
+        const entry = playlist[idx];
+        if (entry.url) return entry.url;
+        for (let i = 0; i < retries; i++) {
+            try {
+                const url = await getVideoUrl(entry.api);
+                if (url) {
+                    entry.url = url;
+                    return url;
+                }
+            } catch (e) {
+                if (i === retries - 1) throw e;
+            }
+        }
+        throw new Error('Empty video url');
+    }
+
+    async function preload(video, idx) {
+        const src = await getCachedVideoUrl(idx);
         video.src = src;
         video.loop = false;
         video.preload = 'auto';
@@ -43,7 +59,7 @@
     }
 
     async function playInitial() {
-        const src = await preload(videos[currentVideo], playlist[index].api);
+        const src = await preload(videos[currentVideo], index);
         await videos[currentVideo].play();
         videos[currentVideo].style.opacity = '1';
         startTime = Date.now();
@@ -52,7 +68,7 @@
             info.textContent = `URL: ${src} (${playbacks}) (0s)`;
         }
         nextIndex = (index + 1) % playlist.length;
-        await preload(videos[nextVideo], playlist[nextIndex].api);
+        await preload(videos[nextVideo], nextIndex);
         videos[currentVideo].onended = handleEnd;
     }
 
@@ -76,7 +92,7 @@
         currentVideo = nextVideo;
         nextVideo = currentVideo ? 0 : 1;
         nextIndex = (index + 1) % playlist.length;
-        await preload(videos[nextVideo], playlist[nextIndex].api);
+        await preload(videos[nextVideo], nextIndex);
         videos[currentVideo].onended = handleEnd;
     }
 
