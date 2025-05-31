@@ -30,13 +30,14 @@
     async function playCurrent() {
         const current = playlist[index];
         const maxRetries = 9;
+        console.log('Playing video from API:', current.api);
         for (let attempt = 0; attempt < maxRetries; attempt++) {
             try {
                 const src = await getVideoUrl(current.api);
                 if (!src) throw new Error('Empty video url');
 
                 video.src = src;
-                video.poster = current.poster;
+                // video.poster = current.poster;
                 video.loop = false; // handle looping manually to track playbacks
                 await video.play();
                 startTime = Date.now();
