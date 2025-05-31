@@ -1,12 +1,16 @@
-
 (async function () {
-    const video = document.getElementById('background-video');
+    const videos = [
+        document.getElementById('background-video-1'),
+        document.getElementById('background-video-2')
+    ];
     const info = document.getElementById('video-info');
-    if (!video) return;
+    if (!videos[0] || !videos[1]) return;
 
-    video.setAttribute('playsinline', '');
-    video.setAttribute('webkit-playsinline', '');
-    video.playsInline = true;
+    videos.forEach(v => {
+        v.setAttribute('playsinline', '');
+        v.setAttribute('webkit-playsinline', '');
+        v.playsInline = true;
+    });
 
     async function getVideoUrl(api) {
         const resp = await fetch(api);
@@ -21,6 +25,8 @@
     ];
     let index = 0; // currently playing playlist index
     let nextIndex = 1;
+    let currentVideo = 0;
+    let nextVideo = 1;
 
     const FADE_DURATION = 0.5; // seconds before the end when we start the fade
 
@@ -45,9 +51,18 @@
         throw new Error('Empty video url');
     }
 
+    async function preload(video, idx) {
+        const src = await getCachedVideoUrl(idx);
+        video.src = src;
+        video.loop = false;
+        video.preload = 'auto';
+        video.load();
+        return src;
+    }
+
     let timeUpdateHandler = null;
 
-    function setupTimeUpdate() {
+    function setupTimeUpdate(video) {
         if (timeUpdateHandler) {
             video.removeEventListener('timeupdate', timeUpdateHandler);
         }
@@ -62,50 +77,48 @@
     }
 
     async function playInitial() {
-        const src = await getCachedVideoUrl(index);
-        video.src = src;
-        video.loop = false;
-        video.preload = 'auto';
-        await video.play();
-        video.style.opacity = '1';
+        const src = await preload(videos[currentVideo], index);
+        await videos[currentVideo].play();
+        videos[currentVideo].style.opacity = '1';
         startTime = Date.now();
         playbacks++;
         if (info) {
             info.textContent = `URL: ${src} (${playbacks}) (0s)`;
         }
         nextIndex = (index + 1) % playlist.length;
-        await getCachedVideoUrl(nextIndex);
-        setupTimeUpdate();
+        await preload(videos[nextVideo], nextIndex);
+        setupTimeUpdate(videos[currentVideo]);
     }
 
     async function switchVideos() {
         if (isSwitching) return;
         isSwitching = true;
 
+        const vCurrent = videos[currentVideo];
+        const vNext = videos[nextVideo];
+
         if (timeUpdateHandler) {
-            video.removeEventListener('timeupdate', timeUpdateHandler);
+            vCurrent.removeEventListener('timeupdate', timeUpdateHandler);
             timeUpdateHandler = null;
         }
 
-        const nextSrc = await getCachedVideoUrl(nextIndex);
-        video.style.opacity = '0';
-        video.pause();
-        video.src = nextSrc;
-        video.loop = false;
-        video.preload = 'auto';
-        video.load();
-        await video.play();
-        video.style.opacity = '1';
+        await vNext.play();
+        vNext.style.opacity = '1';
+        vCurrent.style.opacity = '0';
+        vCurrent.pause();
 
         index = nextIndex;
         startTime = Date.now();
         playbacks++;
         if (info) {
-            info.textContent = `URL: ${nextSrc} (${playbacks}) (0s)`;
+            info.textContent = `URL: ${vNext.src} (${playbacks}) (0s)`;
         }
+
+        currentVideo = nextVideo;
+        nextVideo = currentVideo ? 0 : 1;
         nextIndex = (index + 1) % playlist.length;
-        await getCachedVideoUrl(nextIndex);
-        setupTimeUpdate();
+        await preload(videos[nextVideo], nextIndex);
+        setupTimeUpdate(videos[currentVideo]);
         isSwitching = false;
     }
 
@@ -115,7 +128,7 @@
         setInterval(() => {
             if (startTime !== null) {
                 const seconds = Math.floor((Date.now() - startTime) / 1000);
-                info.textContent = `URL: ${video.src} (${playbacks}) (${seconds}s)`;
+                info.textContent = `URL: ${videos[currentVideo].src} (${playbacks}) (${seconds}s)`;
             }
         }, 1000);
     }
