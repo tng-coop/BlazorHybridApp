@@ -1,0 +1,15 @@
+@media (max-width: 640.98px) {
+    #d3-container {
+        width: calc(100vw - 3rem);
+        height: 70vh;
+        border: 3px dashed #d9534f;
+    }
+}
+
+@media (min-width: 641px) {
+    #d3-container {
+        width: calc(100vw - 250px);
+        height: 70vh;
+        border: 3px dashed #d9534f;
+    }
+}
