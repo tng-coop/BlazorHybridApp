@@ -72,7 +72,7 @@ window.d3Demo = {
       }
 
       // 3b) Define margin (pixels of padding on all sides)
-      var margin = 30;
+      var margin = 0;
 
       // 3c) Compute “inner” width/height after accounting for margins
       var width  = rawWidth  - margin * 2;
@@ -106,7 +106,7 @@ window.d3Demo = {
       });
 
       // 3g) Define hex‐cell radius and spacings
-      var R = 10; // radius of each hex cell
+      var R = 30; // radius of each hex cell
       var horiz = Math.sqrt(3) * R;
       var vert  = 1.5 * R;
 
