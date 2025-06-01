@@ -55,7 +55,7 @@ window.d3Demo = {
     if (!container) {
       console.error("Element #d3-container not found.");
       return;
-    }else{
+    } else {
       console.log("Container found:", container);
     }
 
@@ -106,7 +106,7 @@ window.d3Demo = {
       });
 
       // 3g) Define hex‐cell radius and spacings
-      var R = 30; // radius of each hex cell
+      var R = 90; // radius of each hex cell
       var horiz = Math.sqrt(3) * R;
       var vert  = 1.5 * R;
 
@@ -158,17 +158,31 @@ window.d3Demo = {
       var group = svg.append("g")
         .attr("transform", `translate(${margin},${margin})`);
 
-      // 3m) Draw each hexagon inside that group
-      var hexagonPath = d3.hexbin().radius(R).hexagon();
-      group.selectAll("path")
+      // 3m) Draw each hexagon and label it
+      var hexbin = d3.hexbin().radius(R);
+
+      // Create one <g> per hex, positioned at (cx, cy)
+      var hexGroups = group.selectAll("g.hex")
         .data(hexes)
         .enter()
-        .append("path")
-        .attr("d", hexagonPath)
-        .attr("transform", d => `translate(${d.cx},${d.cy})`)
+        .append("g")
+          .attr("class", "hex")
+          .attr("transform", d => `translate(${d.cx},${d.cy})`);
+
+      // 3m.1) Draw the hexagon shape
+      hexGroups.append("path")
+        .attr("d", hexbin.hexagon())
         .attr("fill", "steelblue")
         .attr("stroke", "white")
         .attr("stroke-width", 0.5);
+
+      // 3m.2) Draw a two-digit label (01, 02, …) in the center of each hex
+      hexGroups.append("text")
+        .text((d, i) => String(i + 1).padStart(2, "0"))
+        .attr("text-anchor", "middle")
+        .attr("dy", "0.35em")           // vertically center
+        .attr("fill", "white")
+        .attr("font-size", R * 0.6 + "px");
     }
 
     // ──────────────────────────────────────────────
