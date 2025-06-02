@@ -107,7 +107,7 @@ window.d3Demo = {
       });
 
       // 3g) Define hex‐cell radius and spacings
-      var R = 90; // radius of each hex cell
+      var R = 30; // radius of each hex cell
       var horiz = Math.sqrt(3) * R;
       var vert  = 1.5 * R;
 
