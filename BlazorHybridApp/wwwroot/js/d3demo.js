@@ -153,6 +153,10 @@ window.d3Demo = {
           var li = document.createElement("li");
           li.id = "hex-item-" + (h.idx + 1);
           li.textContent = (h.idx + 1) + " - " + h.zipcode;
+          li.classList.add("list-group-item", "list-group-item-action");
+          li.addEventListener("click", function() {
+            window.d3Demo.scrollToListItem(h.idx);
+          });
           list.appendChild(li);
         });
       }
