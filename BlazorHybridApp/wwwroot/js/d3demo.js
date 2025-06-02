@@ -192,6 +192,7 @@ window.d3Demo = {
       // 3m.1) Draw the hexagon shape
       hexGroups.append("path")
         .attr("d", hexbin.hexagon())
+        .attr("id", (d) => "hex-" + (d.idx + 1))
         .attr("fill", "steelblue")
         .attr("stroke", "white")
         .attr("stroke-width", 0.5);
@@ -210,11 +211,19 @@ window.d3Demo = {
     // ──────────────────────────────────────────────
     drawHexGrid();
     new ResizeObserver(drawHexGrid).observe(container);
+
+    var inputs = document.querySelectorAll('#view-toggle input[name="viewOptions"]');
+    inputs.forEach(function(inp) {
+      inp.addEventListener('change', window.d3Demo.updateLayout);
+    });
+    window.addEventListener('resize', window.d3Demo.updateLayout);
+    window.d3Demo.updateLayout();
   },
 
   scrollToListItem: function(idx) {
     var list = document.getElementById("hex-list");
     var item = document.getElementById("hex-item-" + (idx + 1));
+    var hex  = document.getElementById("hex-" + (idx + 1));
     if (item) {
       if (list) {
         list.querySelectorAll("li.active").forEach(function(li) {
@@ -224,8 +233,43 @@ window.d3Demo = {
       item.classList.add("active");
       item.scrollIntoView({ behavior: "smooth", block: "center" });
     }
+    if (hex) {
+      document.querySelectorAll("#d3-container path.active").forEach(function(p) {
+        p.classList.remove("active");
+      });
+      hex.classList.add("active");
+    }
+  }
+  ,
+  updateLayout: function() {
+    var isMobile = window.matchMedia('(max-width: 640.98px)').matches;
+    var selected = document.querySelector('#view-toggle input[name="viewOptions"]:checked');
+    var mode = selected ? selected.value : 'map';
+    var container = document.getElementById('d3-container');
+    var list = document.getElementById('hex-list');
+
+    if (!isMobile) {
+      if (container) container.classList.remove('background','show');
+      if (list) list.classList.remove('hide');
+      return;
+    }
+
+    if (mode === 'list') {
+      if (container) {
+        container.classList.add('background');
+        container.classList.remove('show');
+      }
+      if (list) list.classList.remove('hide');
+    } else {
+      if (container) {
+        container.classList.add('show');
+        container.classList.remove('background');
+      }
+      if (list) list.classList.add('hide');
+    }
   }
 };
 
 // Trigger initial draw when script loads
 window.d3Demo.init();
+

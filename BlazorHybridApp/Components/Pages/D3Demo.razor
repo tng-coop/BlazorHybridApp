@@ -5,6 +5,13 @@
 
 <h1>D3 Demo</h1>
 
+<div id="view-toggle" class="btn-group btn-group-toggle mb-2" role="group" aria-label="View mode">
+    <input type="radio" class="btn-check" name="viewOptions" id="listOption" value="list" autocomplete="off">
+    <label class="btn btn-outline-primary" for="listOption">List</label>
+    <input type="radio" class="btn-check" name="viewOptions" id="mapOption" value="map" autocomplete="off" checked>
+    <label class="btn btn-outline-primary" for="mapOption">Hex Map</label>
+</div>
+
 <!-- 
   Give the container a real size (e.g. 50% of the viewport width and 50% of the viewport height),
   and a light border so you can see where it is. 

@@ -7,3 +7,49 @@
     overflow-y: auto;
     scroll-behavior: smooth;
 }
+
+/* Highlighted hex path */
+#d3-container path.active {
+    fill: orange;
+}
+
+/* Mobile layout adjustments */
+@media (max-width: 640.98px) {
+    #view-toggle {
+        display: flex;
+    }
+
+    .d3-demo-layout {
+        position: relative;
+    }
+
+    #d3-container {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    #d3-container.background {
+        opacity: 0.2;
+        pointer-events: none;
+    }
+
+    #d3-container.background text {
+        display: none;
+    }
+
+    #d3-container.show {
+        opacity: 1;
+    }
+
+    #hex-list.hide {
+        display: none;
+    }
+}
+
+@media (min-width: 641px) {
+    #view-toggle {
+        display: none;
+    }
+}
