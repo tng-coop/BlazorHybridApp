@@ -1,0 +1,46 @@
+@page "/fading-svg"
+<div class="fading-svg-container">
+    <!-- SVG filter definition hidden from view -->
+    <svg width="0" height="0" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <filter id="fractalFadeMask" x="0" y="0" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.4" numOctaves="3" seed="1" result="noise" />
+            <feGaussianBlur in="noise" stdDeviation="2" result="blurredNoise" />
+            <feComponentTransfer in="blurredNoise" result="alphaMask">
+                <feFuncR type="table" tableValues="1 0" />
+                <feFuncG type="table" tableValues="1 0" />
+                <feFuncB type="table" tableValues="1 0" />
+                <feFuncA type="table" tableValues="1 0" />
+            </feComponentTransfer>
+            <feColorMatrix in="alphaMask" type="matrix"
+                values="
+                    0 0 0 0 0
+                    0 0 0 0 0
+                    0 0 0 0 0
+                    0 0 0 1 0" result="maskAlpha" />
+            <feComposite in="SourceGraphic" in2="maskAlpha" operator="in" result="maskedGraphic" />
+        </filter>
+    </svg>
+
+    <!-- ite rectangle using the fractal mask -->
+    <svg class="fading-svg" viewBox="0 0 100 30" preserveAspectRatio="none">
+        <rect width="100%" height="100%" fill="white" filter="url(#fractalFadeMask)" />
+    </svg>
+</div>
+
+<style>
+    .fading-svg-container {
+        background-color: black;
+        width: 100%;
+        height: 100vh;
+        position: relative;
+    }
+
+    .fading-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 30vh;
+    }
+</style>
+
