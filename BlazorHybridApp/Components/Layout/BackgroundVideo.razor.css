@@ -1,8 +1,9 @@
 .background-video {
     position: fixed;
+    top:0;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 10;
     height: 30vh;
     width: 100%;
     object-fit: cover;
