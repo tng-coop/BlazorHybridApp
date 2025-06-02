@@ -85,6 +85,18 @@ app.MapGet("/api/goat-video-url", async (PexelsClient client, CancellationToken 
     return Results.Json(new { url });
 });
 
+app.MapPost("/api/upload-test", async (HttpContext context) =>
+{
+    long count = 0;
+    var buffer = new byte[16 * 1024];
+    int read;
+    while ((read = await context.Request.Body.ReadAsync(buffer, context.RequestAborted)) > 0)
+    {
+        count += read;
+    }
+    return Results.Json(new { received = count });
+}).DisableAntiforgery();
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode() 
     .AddInteractiveWebAssemblyRenderMode()

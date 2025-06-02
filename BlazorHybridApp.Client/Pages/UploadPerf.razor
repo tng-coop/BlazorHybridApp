@@ -1,0 +1,52 @@
+@page "/uploadperf"
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Upload Performance</PageTitle>
+
+<h1>Upload Performance Test</h1>
+
+<div class="mb-3">
+    <label>Select size to upload:</label>
+    <select @bind="selectedSize" class="form-select w-auto d-inline-block ms-2">
+        @foreach (var size in sizes)
+        {
+            <option value="@size">@FormatSize(size)</option>
+        }
+    </select>
+    <button class="btn btn-primary ms-2" @onclick="RunTest" disabled="@running">Run Test</button>
+</div>
+
+@if (resultText is not null)
+{
+    <p>@resultText</p>
+}
+
+@code {
+    [Inject] HttpClient Http { get; set; } = default!;
+
+    private readonly int[] sizes = new[] { 1_000_000, 5_000_000, 10_000_000, 20_000_000 };
+    private int selectedSize = 1_000_000;
+
+    private bool running;
+    private string? resultText;
+
+    private static string FormatSize(int bytes) => $"{bytes / 1_000_000} MB";
+
+    private async Task RunTest()
+    {
+        running = true;
+        resultText = null;
+        var data = new byte[selectedSize];
+        Random.Shared.NextBytes(data);
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        using var content = new ByteArrayContent(data);
+        var response = await Http.PostAsync("/api/upload-test", content);
+        response.EnsureSuccessStatusCode();
+        sw.Stop();
+        var seconds = sw.Elapsed.TotalSeconds;
+        var mb = selectedSize / 1_000_000.0;
+        var throughput = mb / seconds;
+        resultText = $"Uploaded {FormatSize(selectedSize)} in {seconds:F2} s ({throughput:F2} MB/s)";
+        running = false;
+    }
+}
