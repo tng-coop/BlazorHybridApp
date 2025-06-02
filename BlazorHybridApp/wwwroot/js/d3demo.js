@@ -42,6 +42,7 @@ window.d3Demo = {
 
     var rawData = d3.csvParse(csvString, function(d) {
       return {
+        zipcode: d.Zipcode,
         count: +d.Count,
         lat:   +d.Latitude,
         lon:   +d.Longitude
@@ -95,13 +96,13 @@ window.d3Demo = {
         .domain(latExtent)
         .range([height, 0]); // flip so higher lat is “up”
 
-      // 3f) Expand each row by its count → flat array of {px, py}
+      // 3f) Expand each row by its count → flat array of {px, py, zipcode}
       var points = [];
       rawData.forEach(function(d) {
         var px = xScale(d.lon),
             py = yScale(d.lat);
         for (var i = 0; i < d.count; i++) {
-          points.push({ px, py });
+          points.push({ px, py, zipcode: d.zipcode });
         }
       });
 
@@ -124,8 +125,8 @@ window.d3Demo = {
       }
 
       // 3i) Assign points to nearest unused grid cell
-      var hexes = []; // will hold { cx, cy, r: R }
-      points.forEach(function(pt) {
+      var hexes = []; // will hold { cx, cy, r: R, idx }
+      points.forEach(function(pt, idx) {
         // For each grid cell, compute squared distance to (pt.px, pt.py)
         var dists = gridCells.map(function(cell, idx) {
           var dx = cell.cx - pt.px;
@@ -138,27 +139,39 @@ window.d3Demo = {
           if (!cell.used) {
             cell.used = true;
             // Remember: cx,cy are in “inner” coordinates; we'll shift them by margin later
-            hexes.push({ cx: cell.cx, cy: cell.cy, r: R });
+            hexes.push({ cx: cell.cx, cy: cell.cy, r: R, idx: idx, zipcode: pt.zipcode });
             break;
           }
         }
       });
 
-      // 3j) Remove existing SVG
+      // 3j) Update list of hexes
+      var list = document.getElementById("hex-list");
+      if (list) {
+        list.innerHTML = "";
+        hexes.forEach(function(h) {
+          var li = document.createElement("li");
+          li.id = "hex-item-" + (h.idx + 1);
+          li.textContent = (h.idx + 1) + " - " + h.zipcode;
+          list.appendChild(li);
+        });
+      }
+
+      // 3k) Remove existing SVG
       d3.select(container).selectAll("svg").remove();
 
-      // 3k) Append new SVG sized to the full container (including margin)
+      // 3l) Append new SVG sized to the full container (including margin)
       var svg = d3.select(container)
         .append("svg")
         .attr("width",  rawWidth)
         .attr("height", rawHeight)
         .style("display", "block");
 
-      // 3l) Append a <g> shifted by (margin, margin) so (0,0) is top-left of inner area
+      // 3m) Append a <g> shifted by (margin, margin) so (0,0) is top-left of inner area
       var group = svg.append("g")
         .attr("transform", `translate(${margin},${margin})`);
 
-      // 3m) Draw each hexagon and label it
+      // 3n) Draw each hexagon and label it
       var hexbin = d3.hexbin().radius(R);
 
       // Create one <g> per hex, positioned at (cx, cy)
@@ -167,7 +180,10 @@ window.d3Demo = {
         .enter()
         .append("g")
           .attr("class", "hex")
-          .attr("transform", d => `translate(${d.cx},${d.cy})`);
+          .attr("transform", d => `translate(${d.cx},${d.cy})`)
+          .on("click", function(event, d) {
+            window.d3Demo.scrollToListItem(d.idx);
+          });
 
       // 3m.1) Draw the hexagon shape
       hexGroups.append("path")
@@ -190,6 +206,13 @@ window.d3Demo = {
     // ──────────────────────────────────────────────
     drawHexGrid();
     new ResizeObserver(drawHexGrid).observe(container);
+  },
+
+  scrollToListItem: function(idx) {
+    var item = document.getElementById("hex-item-" + (idx + 1));
+    if (item) {
+      item.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
   }
 };
 

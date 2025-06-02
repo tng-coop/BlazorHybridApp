@@ -4,6 +4,12 @@
         height: 70vh;
         border: 3px dashed #d9534f;
     }
+    #hex-list-container {
+        max-height: 30vh;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        margin-top: 1rem;
+    }
 }
 
 @media (min-width: 641px) {
@@ -12,4 +18,32 @@
         height: 70vh;
         border: 3px dashed #d9534f;
     }
+    #d3-container,
+    #hex-list-container {
+        display: inline-block;
+        vertical-align: top;
+    }
+    #hex-list-container {
+        width: 240px;
+        height: 70vh;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        margin-left: 1rem;
+    }
+}
+
+#hex-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#hex-list li {
+    padding: 0.25rem 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.d3-demo-layout {
+    display: flex;
+    flex-wrap: wrap;
 }
