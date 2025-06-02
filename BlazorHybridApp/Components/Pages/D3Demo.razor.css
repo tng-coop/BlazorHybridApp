@@ -1,35 +1,21 @@
-@media (max-width: 640.98px) {
-    #d3-container {
-        width: calc(100vw - 3rem);
-        height: 70vh;
-        border: 3px dashed #d9534f;
-    }
-    #hex-list-container {
-        max-height: 30vh;
-        overflow-y: auto;
-        scroll-behavior: smooth;
-        margin-top: 1rem;
-    }
+#d3-container {
+    width: calc(100vw - 250px);
+    height: 70vh;
+    border: 3px dashed #d9534f;
 }
 
-@media (min-width: 641px) {
-    #d3-container {
-        width: calc(100vw - 250px);
-        height: 70vh;
-        border: 3px dashed #d9534f;
-    }
-    #d3-container,
-    #hex-list-container {
-        display: inline-block;
-        vertical-align: top;
-    }
-    #hex-list-container {
-        width: 240px;
-        height: 70vh;
-        overflow-y: auto;
-        scroll-behavior: smooth;
-        margin-left: 1rem;
-    }
+#hex-list-container {
+    width: 240px;
+    height: 70vh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    margin-left: 1rem;
+}
+
+#d3-container,
+#hex-list-container {
+    display: inline-block;
+    vertical-align: top;
 }
 
 #hex-list {
@@ -45,5 +31,10 @@
 
 .d3-demo-layout {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+}
+
+#hex-list li.active {
+    background-color: #ffeeba;
+    font-weight: bold;
 }

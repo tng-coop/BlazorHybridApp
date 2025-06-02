@@ -209,8 +209,15 @@ window.d3Demo = {
   },
 
   scrollToListItem: function(idx) {
+    var list = document.getElementById("hex-list");
     var item = document.getElementById("hex-item-" + (idx + 1));
     if (item) {
+      if (list) {
+        list.querySelectorAll("li.active").forEach(function(li) {
+          li.classList.remove("active");
+        });
+      }
+      item.classList.add("active");
       item.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }
