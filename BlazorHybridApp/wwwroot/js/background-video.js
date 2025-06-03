@@ -157,6 +157,7 @@
   // Start playing the very first video in the playlist
   async function playInitial() {
     await preloadPoster(videos[currentVideo], index);
+    videos[currentVideo].style.opacity = '1';
     const blobUrl = await preload(videos[currentVideo], index);
     try {
       await videos[currentVideo].play();
