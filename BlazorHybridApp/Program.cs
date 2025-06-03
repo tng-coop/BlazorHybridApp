@@ -5,8 +5,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 using BlazorHybridApp.Client.Pages;
 using BlazorHybridApp.Components;
 using BlazorHybridApp.Components.Account;
-using BlazorHybridApp.Data;
 using BlazorHybridApp.Services;
+using BlazorHybridApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +49,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.EnsureCreated();
+    DataSeeder.SeedBackgroundVideosAsync(scope.ServiceProvider).GetAwaiter().GetResult();
 }
 
 // Configure the HTTP request pipeline.
@@ -71,25 +72,25 @@ app.UseAntiforgery();
 
 app.MapStaticAssets();
 
-app.MapGet("/api/waterfall-video-info", async (PexelsClient client, CancellationToken ct) =>
+app.MapGet("/api/waterfall-video-info", async (ApplicationDbContext db, CancellationToken ct) =>
 {
-    const int videoId = 6394054;
-    var info = await client.GetVideoInfoAsync(videoId, ct);
+    var info = await db.BackgroundVideos.FirstOrDefaultAsync(v => v.Name == "waterfall", ct);
+    if (info is null) return Results.NotFound();
     return Results.Json(new { url = info.Url, poster = info.Poster });
 });
 
-app.MapGet("/api/waterfall-video-url", async (PexelsClient client, CancellationToken ct) =>
+app.MapGet("/api/waterfall-video-url", async (ApplicationDbContext db, CancellationToken ct) =>
 {
-    const int videoId = 6394054;
-    var url = await client.GetVideoUrlAsync(videoId, ct);
-    return Results.Json(new { url });
+    var info = await db.BackgroundVideos.FirstOrDefaultAsync(v => v.Name == "waterfall", ct);
+    if (info is null) return Results.NotFound();
+    return Results.Json(new { url = info.Url });
 });
 
-app.MapGet("/api/goat-video-url", async (PexelsClient client, CancellationToken ct) =>
+app.MapGet("/api/goat-video-url", async (ApplicationDbContext db, CancellationToken ct) =>
 {
-    const int videoId = 30646036;
-    var url = await client.GetVideoUrlAsync(videoId, ct);
-    return Results.Json(new { url });
+    var info = await db.BackgroundVideos.FirstOrDefaultAsync(v => v.Name == "goat", ct);
+    if (info is null) return Results.NotFound();
+    return Results.Json(new { url = info.Url });
 });
 
 app.MapPost("/api/upload-test", async (HttpContext context) =>
