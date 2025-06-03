@@ -12,16 +12,15 @@
     v.playsInline = true;
   });
 
-  async function getVideoUrl(api) {
+  async function getVideoInfo(api) {
     const resp = await fetch(api);
-    if (!resp.ok) throw new Error('Failed to fetch video url');
-    const data = await resp.json();
-    return data.url;
+    if (!resp.ok) throw new Error('Failed to fetch video info');
+    return await resp.json();
   }
 
   const playlist = [
-    { api: '/api/waterfall-video-url', url: null },
-    { api: '/api/goat-video-url',      url: null }
+    { api: '/api/waterfall-video-info', url: null, poster: null },
+    { api: '/api/goat-video-url',       url: null }
   ];
   let index = 0;        // which playlist entry is “current”
   let nextIndex = 1;    // which playlist entry is “next”
@@ -43,10 +42,11 @@
     if (entry.url) return entry.url;
     for (let i = 0; i < retries; i++) {
       try {
-        const url = await getVideoUrl(entry.api);
-        if (url) {
-          entry.url = url;
-          return url;
+        const info = await getVideoInfo(entry.api);
+        if (info && info.url) {
+          entry.url = info.url;
+          if (info.poster) entry.poster = info.poster;
+          return entry.url;
         }
       } catch (e) {
         if (i === retries - 1) throw e;
@@ -105,6 +105,39 @@
     return blobUrl;
   }
 
+  async function preloadPoster(videoEl, idx) {
+    const entry = playlist[idx];
+    if (!entry.poster) {
+      const info = await getVideoInfo(entry.api);
+      if (info.poster) entry.poster = info.poster;
+    }
+    if (!entry.poster) return;
+
+    const cache = await caches.open(CACHE_NAME);
+    let response = await cache.match(entry.poster);
+    if (!response) {
+      response = await fetch(entry.poster);
+      if (response.ok) {
+        try {
+          await cache.put(entry.poster, response.clone());
+        } catch (err) {
+          console.warn('Could not cache poster:', err);
+        }
+      } else {
+        console.warn('Failed to fetch poster:', response.status);
+        return;
+      }
+    }
+
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    if (videoEl._lastPosterBlobUrl) {
+      URL.revokeObjectURL(videoEl._lastPosterBlobUrl);
+    }
+    videoEl._lastPosterBlobUrl = blobUrl;
+    videoEl.poster = blobUrl;
+  }
+
   let timeUpdateHandler = null;
   function setupTimeUpdate(videoEl) {
     // Remove any old listener first
@@ -123,6 +156,7 @@
 
   // Start playing the very first video in the playlist
   async function playInitial() {
+    await preloadPoster(videos[currentVideo], index);
     const blobUrl = await preload(videos[currentVideo], index);
     try {
       await videos[currentVideo].play();

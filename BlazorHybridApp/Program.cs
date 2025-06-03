@@ -71,6 +71,13 @@ app.UseAntiforgery();
 
 app.MapStaticAssets();
 
+app.MapGet("/api/waterfall-video-info", async (PexelsClient client, CancellationToken ct) =>
+{
+    const int videoId = 6394054;
+    var info = await client.GetVideoInfoAsync(videoId, ct);
+    return Results.Json(new { url = info.Url, poster = info.Poster });
+});
+
 app.MapGet("/api/waterfall-video-url", async (PexelsClient client, CancellationToken ct) =>
 {
     const int videoId = 6394054;
