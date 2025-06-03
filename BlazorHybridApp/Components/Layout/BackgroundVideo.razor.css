@@ -17,6 +17,18 @@
     -webkit-mask-image: linear-gradient(to right, transparent, white 30%);
 }
 
+.video-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 6vw;
+    text-align: center;
+    pointer-events: none;
+    z-index: 0;
+}
+
 #video-info {
     position: fixed;
     left: 0;
