@@ -107,7 +107,7 @@ namespace BlazorHybridApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BackgroundVideos", (string)null);
+                    b.ToTable("BackgroundVideos");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
