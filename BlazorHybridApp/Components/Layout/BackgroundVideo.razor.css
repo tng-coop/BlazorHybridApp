@@ -12,6 +12,9 @@
     background-color: black;
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
+    /* Fade the video out near the sidebar to improve menu legibility */
+    mask-image: linear-gradient(to right, transparent, white 30%);
+    -webkit-mask-image: linear-gradient(to right, transparent, white 30%);
 }
 
 #video-info {
