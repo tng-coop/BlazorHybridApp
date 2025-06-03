@@ -13,6 +13,7 @@ required_vars=(
   UploadSettings__Endpoint
   DownloadSettings__Endpoint
   DefaultUser__Password
+  Pexels__ApiKey
   )
 
 for var in "${required_vars[@]}"; do
@@ -34,5 +35,6 @@ gh secret set PUBLICIMAGES_ENDPOINT --body "$PublicImages__Endpoint"
 gh secret set UPLOADSETTINGS_ENDPOINT --body "$UploadSettings__Endpoint"
 gh secret set DOWNLOADSETTINGS_ENDPOINT --body "$DownloadSettings__Endpoint"
 gh secret set DEFAULTUSER_PASSWORD --body "$DefaultUser__Password"
+gh secret set PEXELS_API_KEY --body "$Pexels__ApiKey"
 
 echo "✅ GitHub Actions secrets set successfully!"
