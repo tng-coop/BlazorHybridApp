@@ -99,6 +99,7 @@ jobs:
           Authentication__GOOGLE__ClientSecret: ${{ secrets.AUTH_GOOGLE_CLIENT_SECRET }}
           JwtSettings__PrivateKeyBase64: ${{ secrets.JWTSETTINGS_PRIVATE_KEY }}
           DefaultUser__Password: ${{ secrets.DEFAULTUSER_PASSWORD }}
+          Pexels__ApiKey: ${{ secrets.PEXELS_API_KEY }}
           
           
         run: |
