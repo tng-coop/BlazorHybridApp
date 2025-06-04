@@ -10,6 +10,8 @@ using BlazorHybridApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.RootComponents.RegisterCustomElement<BackgroundVideo>("background-video");
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
