@@ -8,11 +8,17 @@ COPY . .
 # 1.a) Install the Blazor/WASM linker (wasm-tools) so trimming happens
 RUN dotnet workload install wasm-tools
 
-# 1.b) (Optional) Ensure the .NET global tools folder is on PATH 
+# 1.b) Install Python3 (required by the WASM build pipeline) and create a “python” symlink
+RUN apt-get update \
+    && apt-get install -y python3 \
+    && ln -sf /usr/bin/python3 /usr/bin/python \
+    && rm -rf /var/lib/apt/lists/*
+
+# 1.c) (Optional) Ensure the .NET global tools folder is on PATH 
 #     (You already had this—but the ordering doesn’t strictly matter.)
 ENV PATH="${PATH}:/root/.dotnet/tools"
 
-# 1.c) Restore & Publish in Release
+# 1.d) Restore & Publish in Release
 RUN dotnet restore
 RUN dotnet publish -c Release -o out
 
