@@ -5,4 +5,10 @@
 
 <h1 id="homeTitle">Thank you coop</h1>
 
-<BackgroundVideo/>
+<div>
+    @((MarkupString)htmlWithWebComponent)
+</div>
+
+@code {
+    private const string htmlWithWebComponent = "<background-video></background-video>";
+}
