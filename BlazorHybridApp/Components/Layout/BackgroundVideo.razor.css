@@ -13,8 +13,18 @@
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
     /* Fade the video out near the sidebar to improve menu legibility */
-    mask-image: linear-gradient(to right, transparent, white 30%);
-    -webkit-mask-image: linear-gradient(to right, transparent, white 30%);
+    mask-image: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.1)   0px,   /* fully opaque at 0px */
+    rgba(255, 255, 255, 0.1)   150px,   /* fully opaque at 0px */
+    rgba(255, 255, 255, 1) 350px    /* fully transparent at 250px */
+  );
+    -webkit-mask-image: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.1)   0px,   /* fully opaque at 0px */
+    rgba(255, 255, 255, 0.1)   150px,   /* fully opaque at 0px */
+    rgba(255, 255, 255, 1) 350px    /* fully transparent at 250px */
+  );
 }
 
 #video-info {
