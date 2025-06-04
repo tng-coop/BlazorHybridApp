@@ -9,7 +9,16 @@ h1 {
     z-index: 1;
     margin: 0;
 }
-
+@media (max-width: 640.98px) {
+#homeTitle {
+  display: none;
+}
+}
+@media (min-width: 641px) {
+#homeTitle {
+  display: block;
+}
+}
 /* Ensure the page container is positioned correctly for absolute centering */
 :host {
     position: relative;
