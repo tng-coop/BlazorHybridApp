@@ -1,18 +1,22 @@
 # Dockerfile.render
 
-# Build Stage
+# 1) Build Stage
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /app
 COPY . .
 
-# Ensure the .NET global tools folder is on PATH
+# 1.a) Install the Blazor/WASM linker (wasm-tools) so trimming happens
+RUN dotnet workload install wasm-tools
+
+# 1.b) (Optional) Ensure the .NET global tools folder is on PATH 
+#     (You already had this—but the ordering doesn’t strictly matter.)
 ENV PATH="${PATH}:/root/.dotnet/tools"
 
-# Restore and publish
+# 1.c) Restore & Publish in Release
 RUN dotnet restore
 RUN dotnet publish -c Release -o out
 
-# Runtime Stage
+# 2) Runtime Stage
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
 COPY --from=build /app/out .

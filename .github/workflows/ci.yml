@@ -46,6 +46,9 @@ jobs:
         with:
           dotnet-version: '9.x'
 
+      - name: Install wasm-tools workload
+        run: dotnet workload install wasm-tools
+
       - name: Install dotnet-ef CLI
         run: dotnet tool install --global dotnet-ef
 
@@ -82,7 +85,6 @@ jobs:
           find /srv/ -type d -exec chmod 755 {} \;
           find /srv/ -type f -exec chmod 644 {} \;
 
-
       - name: Check cert file is readable
         run: |
           cat /srv/shared/aspnet/cert/aspnet.lan-ca.crt
@@ -100,8 +102,6 @@ jobs:
           JwtSettings__PrivateKeyBase64: ${{ secrets.JWTSETTINGS_PRIVATE_KEY }}
           DefaultUser__Password: ${{ secrets.DEFAULTUSER_PASSWORD }}
           Pexels__ApiKey: ${{ secrets.PEXELS_API_KEY }}
-          
-          
         run: |
           chmod +x ./scripts/run-app-and-tests.sh
           bash -vx ./scripts/run-app-and-tests.sh
@@ -122,4 +122,3 @@ jobs:
           name: test-logs
           path: logs/
         if: always()
-          
