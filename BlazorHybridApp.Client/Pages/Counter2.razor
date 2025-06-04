@@ -1,0 +1,14 @@
+@page "/counter2"
+@rendermode InteractiveWebAssembly
+@using Microsoft.AspNetCore.Components
+
+<PageTitle>Counter 2</PageTitle>
+
+<h1>Counter 2</h1>
+
+@{
+    var counterHtml = (MarkupString)"<my-counter></my-counter>";
+}
+
+<div>@counterHtml</div>
+
