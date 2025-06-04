@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
-using BlazorHybridApp.Client.Pages;
 using BlazorHybridApp.Components;
 using BlazorHybridApp.Components.Account;
 using BlazorHybridApp.Services;
@@ -12,7 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents()
     .AddAuthenticationStateSerialization();
 
@@ -106,7 +103,6 @@ app.MapPost("/api/upload-test", async (HttpContext context) =>
 }).DisableAntiforgery();
 
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode() 
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(BlazorHybridApp.Client._Imports).Assembly);
 
