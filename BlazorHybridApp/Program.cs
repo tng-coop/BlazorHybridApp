@@ -5,6 +5,11 @@ using BlazorHybridApp.Components;
 using BlazorHybridApp.Components.Account;
 using BlazorHybridApp.Services;
 using BlazorHybridApp.Data;
+using Microsoft.Extensions.Logging;
+
+const int WaterfallVideoId = 6394054;
+const int GoatVideoId = 30646036;
+var isDatabaseAvailable = true;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,12 +46,22 @@ builder.Services.AddHttpClient<PexelsClient>();
 
 var app = builder.Build();
 
-// Ensure the database is created
+// Attempt to initialize the database; continue even if it fails
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.EnsureCreated();
-    DataSeeder.SeedBackgroundVideosAsync(scope.ServiceProvider).GetAwaiter().GetResult();
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        db.Database.EnsureCreated();
+        DataSeeder.SeedBackgroundVideosAsync(scope.ServiceProvider).GetAwaiter().GetResult();
+    }
+    catch (Exception ex)
+    {
+        isDatabaseAvailable = false;
+        var loggerFactory = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger("Startup");
+        logger.LogWarning(ex, "Database unavailable. Continuing without it.");
+    }
 }
 
 // Configure the HTTP request pipeline.
@@ -69,25 +84,70 @@ app.UseAntiforgery();
 
 app.MapStaticAssets();
 
-app.MapGet("/api/waterfall-video-info", async (ApplicationDbContext db, CancellationToken ct) =>
+app.MapGet("/api/waterfall-video-info", async (ApplicationDbContext db, PexelsClient client, CancellationToken ct) =>
 {
-    var info = await db.BackgroundVideos.FirstOrDefaultAsync(v => v.Name == "waterfall", ct);
-    if (info is null) return Results.NotFound();
-    return Results.Json(new { url = info.Url, poster = info.Poster });
+    if (isDatabaseAvailable)
+    {
+        try
+        {
+            var info = await db.BackgroundVideos.FirstOrDefaultAsync(v => v.Name == "waterfall", ct);
+            if (info is not null)
+            {
+                return Results.Json(new { url = info.Url, poster = info.Poster });
+            }
+        }
+        catch
+        {
+            // fall back to Pexels
+        }
+    }
+
+    var videoInfo = await client.GetVideoInfoAsync(WaterfallVideoId, ct);
+    return Results.Json(new { url = videoInfo.Url, poster = videoInfo.Poster });
 });
 
-app.MapGet("/api/waterfall-video-url", async (ApplicationDbContext db, CancellationToken ct) =>
+app.MapGet("/api/waterfall-video-url", async (ApplicationDbContext db, PexelsClient client, CancellationToken ct) =>
 {
-    var info = await db.BackgroundVideos.FirstOrDefaultAsync(v => v.Name == "waterfall", ct);
-    if (info is null) return Results.NotFound();
-    return Results.Json(new { url = info.Url });
+    if (isDatabaseAvailable)
+    {
+        try
+        {
+            var info = await db.BackgroundVideos.FirstOrDefaultAsync(v => v.Name == "waterfall", ct);
+            if (info is not null)
+            {
+                return Results.Json(new { url = info.Url });
+            }
+        }
+        catch
+        {
+            // fall back to Pexels
+        }
+    }
+
+    var url = await client.GetVideoUrlAsync(WaterfallVideoId, ct);
+    return Results.Json(new { url });
 });
 
-app.MapGet("/api/goat-video-url", async (ApplicationDbContext db, CancellationToken ct) =>
+app.MapGet("/api/goat-video-url", async (ApplicationDbContext db, PexelsClient client, CancellationToken ct) =>
 {
-    var info = await db.BackgroundVideos.FirstOrDefaultAsync(v => v.Name == "goat", ct);
-    if (info is null) return Results.NotFound();
-    return Results.Json(new { url = info.Url });
+    if (isDatabaseAvailable)
+    {
+        try
+        {
+            var info = await db.BackgroundVideos.FirstOrDefaultAsync(v => v.Name == "goat", ct);
+            if (info is not null)
+            {
+                return Results.Json(new { url = info.Url });
+            }
+        }
+        catch
+        {
+            // fall back to Pexels
+        }
+    }
+
+    var url = await client.GetVideoUrlAsync(GoatVideoId, ct);
+    return Results.Json(new { url });
 });
 
 app.MapPost("/api/upload-test", async (HttpContext context) =>
