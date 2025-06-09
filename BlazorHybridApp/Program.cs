@@ -15,11 +15,6 @@ var isDatabaseAvailable = true;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var defaultUserPassword = builder.Configuration["DefaultUser:Password"];
-if (string.IsNullOrWhiteSpace(defaultUserPassword))
-{
-    throw new InvalidOperationException("DefaultUser__Password environment variable must be set.");
-}
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -55,6 +50,12 @@ builder.Services.AddHttpClient<PexelsClient>();
 builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.AddScoped<LocalizationService>();
 var app = builder.Build();
+
+var defaultUserPassword = builder.Configuration["DefaultUser:Password"];
+if (string.IsNullOrWhiteSpace(defaultUserPassword))
+{
+    throw new InvalidOperationException("DefaultUser__Password environment variable must be set.");
+}
 
 // Attempt to initialize the database; continue even if it fails
 using (var scope = app.Services.CreateScope())
