@@ -55,20 +55,10 @@ var app = builder.Build();
 // Attempt to initialize the database; continue even if it fails
 using (var scope = app.Services.CreateScope())
 {
-    try
-    {
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         db.Database.EnsureCreated();
         DataSeeder.SeedBackgroundVideosAsync(scope.ServiceProvider).GetAwaiter().GetResult();
         DataSeeder.SeedDefaultUsersAsync(scope.ServiceProvider, defaultUserPassword).GetAwaiter().GetResult();
-    }
-    catch (Exception ex)
-    {
-        isDatabaseAvailable = false;
-        var loggerFactory = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
-        var logger = loggerFactory.CreateLogger("Startup");
-        logger.LogWarning(ex, "Database unavailable. Continuing without it.");
-    }
 }
 
 // Configure the HTTP request pipeline.
