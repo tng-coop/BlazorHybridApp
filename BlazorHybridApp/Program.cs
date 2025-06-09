@@ -170,7 +170,7 @@ app.MapGet("/api/ef-model", async (ApplicationDbContext db) =>
         var rows = new List<Dictionary<string, string?>>();
         try
         {
-            var rowObjects = await db.Set(e.ClrType).Cast<object>().Take(5).ToListAsync();
+            var rowObjects = await db.GetQueryable(e.ClrType).Take(5).ToListAsync();
             foreach (var obj in rowObjects)
             {
                 var dict = new Dictionary<string, string?>();
