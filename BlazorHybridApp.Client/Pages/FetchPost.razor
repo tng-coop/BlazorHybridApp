@@ -1,7 +1,6 @@
 @page "/fetchpost"
 @rendermode InteractiveWebAssembly
 @using System.Text.Json
-@using Ganss.XSS
 
 <PageTitle>Fetch Post</PageTitle>
 
@@ -24,9 +23,7 @@
         var json = await Http.GetStringAsync("https://workers-coop.com/honbu/kanagawa/wp-json/wp/v2/posts/599");
 
         using var doc = JsonDocument.Parse(json);
-        var html = doc.RootElement.GetProperty("content").GetProperty("rendered").GetString();
+        postHtml = doc.RootElement.GetProperty("content").GetProperty("rendered").GetString();
 
-        var sanitizer = new HtmlSanitizer();
-        postHtml = sanitizer.Sanitize(html ?? string.Empty);
     }
 }

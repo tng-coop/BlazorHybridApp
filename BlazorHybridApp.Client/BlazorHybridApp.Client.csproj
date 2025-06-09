@@ -12,7 +12,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.CustomElements" Version="9.0.5" />
-    <PackageReference Include="Ganss.XSS" Version="7.2.0" />
   </ItemGroup>
 
 </Project>
