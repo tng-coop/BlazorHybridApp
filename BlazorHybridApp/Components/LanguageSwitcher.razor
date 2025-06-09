@@ -1,0 +1,49 @@
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage Storage
+@inject IJSRuntime JS
+@inject AuthenticationStateProvider AuthProvider
+
+<div class="language-switcher">
+    <button class="btn btn-link" @onclick="() => SetLanguage(\"EN\")">EN</button>
+    <button class="btn btn-link" @onclick="() => SetLanguage(\"JP\")">JP</button>
+    <span class="ms-2">@currentLanguage</span>
+</div>
+
+@code {
+    private const string StorageKey = "preferredLanguage";
+    private string currentLanguage = "EN";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var stored = await Storage.GetAsync<string>(StorageKey);
+        if (stored.Success && !string.IsNullOrWhiteSpace(stored.Value))
+        {
+            currentLanguage = stored.Value;
+        }
+        else
+        {
+            var authState = await AuthProvider.GetAuthenticationStateAsync();
+            if (!authState.User.Identity?.IsAuthenticated ?? true)
+            {
+                try
+                {
+                    var langs = await JS.InvokeAsync<string[]>("localization.getBrowserLanguages");
+                    if (langs != null && langs.Any(l => l.StartsWith("ja", StringComparison.OrdinalIgnoreCase)))
+                    {
+                        currentLanguage = "JP";
+                    }
+                }
+                catch
+                {
+                    // ignore errors and keep default
+                }
+            }
+        }
+    }
+
+    private async Task SetLanguage(string lang)
+    {
+        currentLanguage = lang;
+        await Storage.SetAsync(StorageKey, currentLanguage);
+    }
+}
