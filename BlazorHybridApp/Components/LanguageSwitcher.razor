@@ -25,17 +25,23 @@
             var authState = await AuthProvider.GetAuthenticationStateAsync();
             if (!authState.User.Identity?.IsAuthenticated ?? true)
             {
-                try
+                var jsRuntimeType = JS?.GetType().FullName;
+                var jsAvailable = jsRuntimeType != "Microsoft.AspNetCore.Components.Endpoints.UnsupportedJavaScriptRuntime";
+
+                if (jsAvailable)
                 {
-                    var langs = await JS.InvokeAsync<string[]>("localization.getBrowserLanguages");
-                    if (langs != null && langs.Any(l => l.StartsWith("ja", StringComparison.OrdinalIgnoreCase)))
+                    try
                     {
-                        currentLanguage = "JP";
+                        var langs = await JS.InvokeAsync<string[]>("localization.getBrowserLanguages");
+                        if (langs != null && langs.Any(l => l.StartsWith("ja", StringComparison.OrdinalIgnoreCase)))
+                        {
+                            currentLanguage = "JP";
+                        }
                     }
-                }
-                catch
-                {
-                    // ignore errors and keep default
+                    catch
+                    {
+                        // ignore errors and keep default
+                    }
                 }
             }
         }
