@@ -1,0 +1,8 @@
+@page "/clicked/{*item}"
+
+<h1>@((item ?? "Nothing") + " was clicked on")</h1>
+
+@code {
+    [Parameter]
+    public string? item { get; set; }
+}

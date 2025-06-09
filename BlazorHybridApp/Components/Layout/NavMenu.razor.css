@@ -110,11 +110,44 @@
     display: block;
 }
 
+.navbar-toggler:checked ~ .overlay-backdrop {
+    display: block;
+}
 
+.overlay-backdrop {
+    display: none;
+}
 
 @media (max-width: 640.98px) {
+    .overlay-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 998;
+    }
     .nav-scrollable {
-        background-color: royalblue;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 16rem;
+        max-width: 80%;
+        height: 100vh;
+        background-color: rgba(255,255,255,0.9);
+        box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+        padding-top: 3.5rem;
+        overflow-y: auto;
+        z-index: 999;
+    }
+    .close-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
     }
 }
 @media (min-width: 641px) {

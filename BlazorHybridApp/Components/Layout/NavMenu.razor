@@ -10,7 +10,10 @@
 
 <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+<div class="overlay-backdrop"></div>
+
+<div class="nav-scrollable">
+    <button class="close-btn" onclick="document.querySelector('.navbar-toggler').click()">✕</button>
     <nav class="nav flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
@@ -78,6 +81,123 @@
                 </div>
             </NotAuthorized>
         </AuthorizeView>
+
+        <div class="nav-item px-3">
+            <details>
+                <summary>News</summary>
+                <ul>
+                    <li>
+                        <details>
+                            <summary>2022</summary>
+                            <ul>
+                                <li>
+                                    <details>
+                                        <summary>March</summary>
+                                        <ul>
+                                            <li><NavLink class="nav-link" href="clicked/Breaking-New-Smartphone-Launches">Breaking: New Smartphone Launches</NavLink></li>
+                                            <li><NavLink class="nav-link" href="clicked/Opinion-The-Rise-of-Remote-Work">Opinion: The Rise of Remote Work</NavLink></li>
+                                        </ul>
+                                    </details>
+                                </li>
+                                <li>
+                                    <details>
+                                        <summary>July</summary>
+                                        <ul>
+                                            <li><NavLink class="nav-link" href="clicked/Feature-Ocean-Cleanup-Technologies">Feature: Ocean Cleanup Technologies</NavLink></li>
+                                            <li><NavLink class="nav-link" href="clicked/Interview-CEO-on-Sustainable-Energy">Interview: CEO on Sustainable Energy</NavLink></li>
+                                        </ul>
+                                    </details>
+                                </li>
+                                <li>
+                                    <details>
+                                        <summary>November</summary>
+                                        <ul>
+                                            <li><NavLink class="nav-link" href="clicked/Report-Cybersecurity-Trends-2022">Report: Cybersecurity Trends 2022</NavLink></li>
+                                            <li><NavLink class="nav-link" href="clicked/Review-Top-Holiday-Gadgets">Review: Top Holiday Gadgets</NavLink></li>
+                                        </ul>
+                                    </details>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                    <li>
+                        <details>
+                            <summary>2024</summary>
+                            <ul>
+                                <li>
+                                    <details>
+                                        <summary>January</summary>
+                                        <ul>
+                                            <li><NavLink class="nav-link" href="clicked/Analysis-Economic-Outlook-2024">Analysis: Economic Outlook 2024</NavLink></li>
+                                            <li><NavLink class="nav-link" href="clicked/Spotlight-Advances-in-AI">Spotlight: Advances in AI</NavLink></li>
+                                        </ul>
+                                    </details>
+                                </li>
+                                <li>
+                                    <details>
+                                        <summary>June</summary>
+                                        <ul>
+                                            <li><NavLink class="nav-link" href="clicked/Travel-Best-Summer-Destinations">Travel: Best Summer Destinations</NavLink></li>
+                                            <li><NavLink class="nav-link" href="clicked/Guide-Healthy-Eating-Habits">Guide: Healthy Eating Habits</NavLink></li>
+                                        </ul>
+                                    </details>
+                                </li>
+                                <li>
+                                    <details>
+                                        <summary>December</summary>
+                                        <ul>
+                                            <li><NavLink class="nav-link" href="clicked/Recap-Year-in-Review">Recap: Year in Review</NavLink></li>
+                                            <li><NavLink class="nav-link" href="clicked/Predictions-for-2025">Predictions for 2025</NavLink></li>
+                                        </ul>
+                                    </details>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                    <li>
+                        <details>
+                            <summary>2025</summary>
+                            <ul>
+                                <li>
+                                    <details>
+                                        <summary>February</summary>
+                                        <ul>
+                                            <li><NavLink class="nav-link" href="clicked/Study-Space-Exploration-Milestones">Study: Space Exploration Milestones</NavLink></li>
+                                            <li><NavLink class="nav-link" href="clicked/News-Global-Art-Exhibitions">News: Global Art Exhibitions</NavLink></li>
+                                        </ul>
+                                    </details>
+                                </li>
+                                <li>
+                                    <details>
+                                        <summary>June</summary>
+                                        <ul>
+                                            <li><NavLink class="nav-link" href="clicked/Update-Climate-Policy-Changes">Update: Climate Policy Changes</NavLink></li>
+                                            <li><NavLink class="nav-link" href="clicked/Story-Electric-Vehicles-Adoption">Story: Electric Vehicles Adoption</NavLink></li>
+                                        </ul>
+                                    </details>
+                                </li>
+                                <li>
+                                    <details>
+                                        <summary>September</summary>
+                                        <ul>
+                                            <li><NavLink class="nav-link" href="clicked/Insight-Educational-Technology-Growth">Insight: Educational Technology Growth</NavLink></li>
+                                            <li><NavLink class="nav-link" href="clicked/Opinion-Future-of-Work">Opinion: Future of Work</NavLink></li>
+                                        </ul>
+                                    </details>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                </ul>
+            </details>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="clicked/About">About</NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="clicked/History">History</NavLink>
+        </div>
     </nav>
 </div>
 
