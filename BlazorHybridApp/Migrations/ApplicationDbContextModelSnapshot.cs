@@ -110,6 +110,21 @@ namespace BlazorHybridApp.Migrations
                     b.ToTable("BackgroundVideos");
                 });
 
+            modelBuilder.Entity("BlazorHybridApp.Data.BranchOfficeContent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BranchOfficeContents");
+                });
+
             modelBuilder.Entity("BlazorHybridApp.Data.HtmlContent", b =>
                 {
                     b.Property<Guid>("Id")
