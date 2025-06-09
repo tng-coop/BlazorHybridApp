@@ -10,12 +10,12 @@
     </button>
     <ul class="dropdown-menu @(GetDropdownMenuClass())">
         <li>
-            <button class="dropdown-item @(GetActiveClass("en"))" @onclick="() => SetLanguage("en")">
+            <button class="dropdown-item @(GetActiveClass("en"))" @onclick="@(() => SetLanguage("en"))">
                 English @GetCheckmark("en")
             </button>
         </li>
         <li>
-            <button class="dropdown-item @(GetActiveClass("ja"))" @onclick="() => SetLanguage("ja")">
+            <button class="dropdown-item @(GetActiveClass("ja"))" @onclick="@(() => SetLanguage("ja"))">
                 日本語 @GetCheckmark("ja")
             </button>
         </li>

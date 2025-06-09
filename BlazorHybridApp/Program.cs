@@ -7,6 +7,7 @@ using BlazorHybridApp.Services;
 using BlazorHybridApp.Data;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using BlazorHybridApp.Client.Services;
 
 const int WaterfallVideoId = 6394054;
 const int GoatVideoId = 30646036;
@@ -52,7 +53,7 @@ builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityEmailSender>();
 builder.Services.AddHttpClient<PexelsClient>();
 builder.Services.AddScoped<ProtectedLocalStorage>();
-
+builder.Services.AddScoped<LocalizationService>();
 var app = builder.Build();
 
 // Attempt to initialize the database; continue even if it fails
