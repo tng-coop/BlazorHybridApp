@@ -65,6 +65,7 @@ using (var scope = app.Services.CreateScope())
         db.Database.EnsureCreated();
         DataSeeder.SeedBackgroundVideosAsync(scope.ServiceProvider).GetAwaiter().GetResult();
         DataSeeder.SeedHtmlContentsAsync(scope.ServiceProvider).GetAwaiter().GetResult();
+        DataSeeder.SeedBranchOfficeContentsAsync(scope.ServiceProvider).GetAwaiter().GetResult();
         DataSeeder.SeedDefaultUsersAsync(scope.ServiceProvider, defaultUserPassword).GetAwaiter().GetResult();
 }
 

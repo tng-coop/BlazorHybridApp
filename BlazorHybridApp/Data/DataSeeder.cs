@@ -53,6 +53,22 @@ public static class DataSeeder
         await db.SaveChangesAsync(cancellationToken);
     }
 
+    public static async Task SeedBranchOfficeContentsAsync(IServiceProvider services, CancellationToken cancellationToken = default)
+    {
+        using var scope = services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        if (await db.BranchOfficeContents.AnyAsync(cancellationToken))
+            return;
+
+        db.BranchOfficeContents.Add(new BranchOfficeContent
+        {
+            Address = "123 Main St"
+        });
+
+        await db.SaveChangesAsync(cancellationToken);
+    }
+
     public static async Task SeedDefaultUsersAsync(IServiceProvider services, string password, CancellationToken cancellationToken = default)
     {
         using var scope = services.CreateScope();

@@ -7,4 +7,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 {
     public DbSet<BackgroundVideo> BackgroundVideos => Set<BackgroundVideo>();
     public DbSet<HtmlContent> HtmlContents => Set<HtmlContent>();
+    public DbSet<BranchOfficeContent> BranchOfficeContents => Set<BranchOfficeContent>();
 }
