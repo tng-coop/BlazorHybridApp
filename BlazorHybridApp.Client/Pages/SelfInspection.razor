@@ -15,7 +15,7 @@ else
     @foreach (var entity in entities)
     {
         <h3>@entity.Name</h3>
-        <table class="table table-bordered table-sm mb-3">
+        <table class="table table-bordered table-sm mb-3 w-auto">
             <thead class="table-primary">
                 <tr>
                     <th>Property</th>
@@ -35,7 +35,7 @@ else
         @if (entity.Navigations?.Count > 0)
         {
             <h4>Relations</h4>
-            <table class="table table-bordered table-sm mb-4">
+            <table class="table table-bordered table-sm mb-4 w-auto">
                 <thead class="table-secondary">
                     <tr>
                         <th>Navigation</th>
@@ -56,7 +56,7 @@ else
         @if (entity.Rows?.Count > 0)
         {
             <h4>Top Rows</h4>
-            <table class="table table-bordered table-sm mb-4">
+            <table class="table table-bordered table-sm mb-4 w-auto">
                 <thead class="table-light">
                     <tr>
                         @foreach (var prop in entity.Properties)
