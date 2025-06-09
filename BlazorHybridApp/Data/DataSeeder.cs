@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
+using System.Net.Http;
+using System.IO;
 
 using BlazorHybridApp.Services;
 
@@ -21,11 +23,31 @@ public static class DataSeeder
         var waterfallInfo = await client.GetVideoInfoAsync(6394054, cancellationToken);
         var goatUrl = await client.GetVideoUrlAsync(30646036, cancellationToken);
 
+        // Cache the poster locally so it can be served even when offline
+        var mediaDir = Path.Combine("wwwroot", "media");
+        Directory.CreateDirectory(mediaDir);
+        var posterPath = Path.Combine(mediaDir, "waterfall-poster.jpg");
+        if (!File.Exists(posterPath))
+        {
+            using var http = new HttpClient();
+            try
+            {
+                using var resp = await http.GetAsync(waterfallInfo.Poster, cancellationToken);
+                resp.EnsureSuccessStatusCode();
+                await using var fs = File.Create(posterPath);
+                await resp.Content.CopyToAsync(fs, cancellationToken);
+            }
+            catch
+            {
+                // Ignore failures - the poster URL will still be stored
+            }
+        }
+
         db.BackgroundVideos.Add(new BackgroundVideo
         {
             Name = "waterfall",
             Url = waterfallInfo.Url,
-            Poster = waterfallInfo.Poster
+            Poster = Path.Combine("media", "waterfall-poster.jpg")
         });
 
         db.BackgroundVideos.Add(new BackgroundVideo
