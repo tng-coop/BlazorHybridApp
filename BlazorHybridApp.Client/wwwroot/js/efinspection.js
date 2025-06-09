@@ -62,13 +62,13 @@ window.efInspection = {
       .data(nodes)
       .enter().append('text')
       .text(d => d.id)
-      .attr('font-size', '10px')
+      .attr('font-size', '20px')
       .attr('text-anchor', 'middle')
       .attr('dy', '.35em');
 
     var simulation = d3.forceSimulation(nodes)
       .force('link', d3.forceLink(links).id(d => d.id).distance(100))
-      .force('charge', d3.forceManyBody().strength(-200))
+      .force('charge', d3.forceManyBody().strength(-30))
       .force('center', d3.forceCenter(width / 2, height / 2));
 
     simulation.on('tick', () => {
