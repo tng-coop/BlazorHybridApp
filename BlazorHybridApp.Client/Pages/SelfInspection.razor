@@ -15,21 +15,43 @@ else
     @foreach (var entity in entities)
     {
         <h3>@entity.Name</h3>
-        <ul>
-            @foreach (var prop in entity.Properties)
-            {
-                <li>@prop.Name (@prop.Type)</li>
-            }
-        </ul>
+        <table class="table table-bordered table-sm mb-3">
+            <thead class="table-primary">
+                <tr>
+                    <th>Property</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var prop in entity.Properties)
+                {
+                    <tr>
+                        <td class="text-info">@prop.Name</td>
+                        <td class="text-muted">@prop.Type</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
         @if (entity.Navigations?.Count > 0)
         {
             <h4>Relations</h4>
-            <ul>
-                @foreach (var nav in entity.Navigations)
-                {
-                    <li>@nav.Name &rarr; @nav.Target</li>
-                }
-            </ul>
+            <table class="table table-bordered table-sm mb-4">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Navigation</th>
+                        <th>Target</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var nav in entity.Navigations)
+                    {
+                        <tr>
+                            <td class="text-success">@nav.Name</td>
+                            <td class="text-warning">@nav.Target</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
     }
 }
