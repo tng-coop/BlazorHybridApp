@@ -53,6 +53,31 @@ else
                 </tbody>
             </table>
         }
+        @if (entity.Rows?.Count > 0)
+        {
+            <h4>Top Rows</h4>
+            <table class="table table-bordered table-sm mb-4">
+                <thead class="table-light">
+                    <tr>
+                        @foreach (var prop in entity.Properties)
+                        {
+                            <th>@prop.Name</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in entity.Rows)
+                    {
+                        <tr>
+                            @foreach (var prop in entity.Properties)
+                            {
+                                <td>@row[prop.Name]</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     }
 }
 
@@ -79,7 +104,11 @@ else
             await JS.InvokeVoidAsync("efInspection.render", entities);
         }
     }
-    private record EntityInfo(string Name, List<PropertyInfo> Properties, List<NavigationInfo> Navigations);
+    private record EntityInfo(
+        string Name,
+        List<PropertyInfo> Properties,
+        List<NavigationInfo> Navigations,
+        List<Dictionary<string, string?>> Rows);
     private record PropertyInfo(string Name, string Type);
     private record NavigationInfo(string Name, string Target);
 }
