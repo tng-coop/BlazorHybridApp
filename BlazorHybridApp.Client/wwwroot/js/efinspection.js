@@ -20,13 +20,29 @@ window.efInspection = {
       .attr('width', width)
       .attr('height', height);
 
+    // draw arrowheads for links
+    var defs = svg.append('defs');
+    defs.append('marker')
+      .attr('id', 'arrow')
+      .attr('viewBox', '0 0 10 10')
+      .attr('refX', 25)
+      .attr('refY', 5)
+      .attr('markerWidth', 6)
+      .attr('markerHeight', 6)
+      .attr('orient', 'auto')
+      .append('path')
+        .attr('d', 'M0,0 L10,5 L0,10 Z')
+        .attr('fill', '#666');
+
     var link = svg.append('g')
       .attr('stroke', '#999')
       .attr('stroke-opacity', 0.6)
-      .selectAll('line')
+      .selectAll('path')
       .data(links)
-      .enter().append('line')
-      .attr('stroke-width', 1.5);
+      .enter().append('path')
+      .attr('stroke-width', 1.5)
+      .attr('fill', 'none')
+      .attr('marker-end', 'url(#arrow)');
 
     var node = svg.append('g')
       .attr('stroke', '#fff')
@@ -57,10 +73,9 @@ window.efInspection = {
 
     simulation.on('tick', () => {
       link
-        .attr('x1', d => d.source.x)
-        .attr('y1', d => d.source.y)
-        .attr('x2', d => d.target.x)
-        .attr('y2', d => d.target.y);
+        .attr('d', d =>
+          `M${d.source.x},${d.source.y} L${d.target.x},${d.target.y}`
+        );
 
       node
         .attr('cx', d => d.x)

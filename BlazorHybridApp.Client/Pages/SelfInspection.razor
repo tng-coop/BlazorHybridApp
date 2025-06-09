@@ -21,6 +21,16 @@ else
                 <li>@prop.Name (@prop.Type)</li>
             }
         </ul>
+        @if (entity.Navigations?.Count > 0)
+        {
+            <h4>Relations</h4>
+            <ul>
+                @foreach (var nav in entity.Navigations)
+                {
+                    <li>@nav.Name &rarr; @nav.Target</li>
+                }
+            </ul>
+        }
     }
 }
 
