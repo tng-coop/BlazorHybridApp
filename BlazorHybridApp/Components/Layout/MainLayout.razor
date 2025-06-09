@@ -1,8 +1,16 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        @if (NavigationManager.Uri.Contains("/Account", StringComparison.OrdinalIgnoreCase))
+        {
+            <NavMenu />
+        }
+        else
+        {
+            @* implement blazor wasm version *@
+        }
     </div>
 
     <main>
@@ -14,7 +22,7 @@
             @Body
         </article>
 
-</main>
+    </main>
 </div>
 
 
