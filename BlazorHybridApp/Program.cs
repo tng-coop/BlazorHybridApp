@@ -6,6 +6,7 @@ using BlazorHybridApp.Components.Account;
 using BlazorHybridApp.Services;
 using BlazorHybridApp.Data;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 const int WaterfallVideoId = 6394054;
 const int GoatVideoId = 30646036;
@@ -50,6 +51,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityEmailSender>();
 builder.Services.AddHttpClient<PexelsClient>();
+builder.Services.AddScoped<ProtectedLocalStorage>();
 
 var app = builder.Build();
 
