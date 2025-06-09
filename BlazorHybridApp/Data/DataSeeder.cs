@@ -37,6 +37,22 @@ public static class DataSeeder
         await db.SaveChangesAsync(cancellationToken);
     }
 
+    public static async Task SeedHtmlContentsAsync(IServiceProvider services, CancellationToken cancellationToken = default)
+    {
+        using var scope = services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        if (await db.HtmlContents.AnyAsync(cancellationToken))
+            return;
+
+        db.HtmlContents.Add(new HtmlContent
+        {
+            Html = "<p>Hello, world!</p>"
+        });
+
+        await db.SaveChangesAsync(cancellationToken);
+    }
+
     public static async Task SeedDefaultUsersAsync(IServiceProvider services, string password, CancellationToken cancellationToken = default)
     {
         using var scope = services.CreateScope();
