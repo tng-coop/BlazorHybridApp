@@ -13,6 +13,12 @@ var isDatabaseAvailable = true;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var defaultUserPassword = builder.Configuration["DefaultUser:Password"];
+if (string.IsNullOrWhiteSpace(defaultUserPassword))
+{
+    throw new InvalidOperationException("DefaultUser__Password environment variable must be set.");
+}
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents()
@@ -54,6 +60,7 @@ using (var scope = app.Services.CreateScope())
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         db.Database.EnsureCreated();
         DataSeeder.SeedBackgroundVideosAsync(scope.ServiceProvider).GetAwaiter().GetResult();
+        DataSeeder.SeedDefaultUsersAsync(scope.ServiceProvider, defaultUserPassword).GetAwaiter().GetResult();
     }
     catch (Exception ex)
     {
