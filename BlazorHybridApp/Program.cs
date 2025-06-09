@@ -5,6 +5,7 @@ using BlazorHybridApp.Components;
 using BlazorHybridApp.Components.Account;
 using BlazorHybridApp.Services;
 using BlazorHybridApp.Data;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using BlazorHybridApp.Client.Services;
@@ -153,15 +154,49 @@ app.MapGet("/api/goat-video-url", async (ApplicationDbContext db, PexelsClient c
     return Results.Json(new { url });
 });
 
-app.MapGet("/api/ef-model", (ApplicationDbContext db) =>
+app.MapGet("/api/ef-model", async (ApplicationDbContext db) =>
 {
-    var entities = db.Model.GetEntityTypes().Select(e => new
+    var entityModels = new List<object>();
+
+    foreach (var e in db.Model.GetEntityTypes())
     {
-        Name = e.ClrType.Name,
-        Properties = e.GetProperties().Select(p => new { Name = p.Name, Type = p.ClrType.Name }),
-        Navigations = e.GetNavigations().Select(n => new { Name = n.Name, Target = n.TargetEntityType.ClrType.Name })
-    });
-    return Results.Json(entities);
+        var properties = e.GetProperties()
+            .Select(p => new { Name = p.Name, Type = p.ClrType.Name })
+            .ToList();
+        var navigations = e.GetNavigations()
+            .Select(n => new { Name = n.Name, Target = n.TargetEntityType.ClrType.Name })
+            .ToList();
+
+        var rows = new List<Dictionary<string, string?>>();
+        try
+        {
+            var rowObjects = await db.Set(e.ClrType).Cast<object>().Take(5).ToListAsync();
+            foreach (var obj in rowObjects)
+            {
+                var dict = new Dictionary<string, string?>();
+                foreach (var prop in e.GetProperties())
+                {
+                    var value = prop.PropertyInfo?.GetValue(obj);
+                    dict[prop.Name] = value?.ToString();
+                }
+                rows.Add(dict);
+            }
+        }
+        catch
+        {
+            // ignore errors when fetching sample data
+        }
+
+        entityModels.Add(new
+        {
+            Name = e.ClrType.Name,
+            Properties = properties,
+            Navigations = navigations,
+            Rows = rows
+        });
+    }
+
+    return Results.Json(entityModels);
 });
 
 app.MapPost("/api/upload-test", async (HttpContext context) =>
