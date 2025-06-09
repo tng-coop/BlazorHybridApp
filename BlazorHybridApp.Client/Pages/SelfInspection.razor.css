@@ -1,4 +1,5 @@
 #ef-diagram {
-    height: 70vh;
-    overflow: auto;
+}
+#maindiv {
+    width: calc(100vw - 350px);
 }

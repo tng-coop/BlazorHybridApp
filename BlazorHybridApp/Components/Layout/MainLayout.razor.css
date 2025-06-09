@@ -58,6 +58,7 @@ main {
         height: 100vh;
         position: sticky;
         top: 0;
+        flex-shrink: 0;
     }
 
     .top-row {

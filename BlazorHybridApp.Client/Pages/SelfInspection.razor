@@ -4,14 +4,14 @@
 <PageTitle>Self Inspection</PageTitle>
 
 <h1>Entity Framework Model</h1>
-
+<div id="maindiv">
 @if (entities is null)
 {
     <p>Loading...</p>
 }
 else
 {
-    <div id="ef-diagram" class="mb-4"></div>
+    <div id="ef-diagram" ></div>
     @foreach (var entity in entities)
     {
         <h3>@entity.Name</h3>
@@ -80,6 +80,8 @@ else
         }
     }
 }
+</div>
+
 
 @code {
     [Inject] HttpClient Http { get; set; } = default!;
