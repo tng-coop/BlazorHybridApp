@@ -152,6 +152,16 @@ app.MapGet("/api/goat-video-url", async (ApplicationDbContext db, PexelsClient c
     return Results.Json(new { url });
 });
 
+app.MapGet("/api/ef-model", (ApplicationDbContext db) =>
+{
+    var entities = db.Model.GetEntityTypes().Select(e => new
+    {
+        Name = e.ClrType.Name,
+        Properties = e.GetProperties().Select(p => new { Name = p.Name, Type = p.ClrType.Name })
+    });
+    return Results.Json(entities);
+});
+
 app.MapPost("/api/upload-test", async (HttpContext context) =>
 {
     long count = 0;
