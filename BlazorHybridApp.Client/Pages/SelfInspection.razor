@@ -42,7 +42,7 @@ else
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && entities is not null)
+        if (entities is not null)
         {
             await JS.InvokeVoidAsync("efInspection.render", entities);
         }

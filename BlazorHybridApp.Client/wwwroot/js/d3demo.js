@@ -269,7 +269,3 @@ window.d3Demo = {
     }
   }
 };
-
-// Trigger initial draw when script loads
-window.d3Demo.init();
-
