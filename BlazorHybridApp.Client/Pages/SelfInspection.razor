@@ -25,12 +25,17 @@ else
 
 @code {
     [Inject] HttpClient Http { get; set; } = default!;
+    [Inject] NavigationManager Nav { get; set; } = default!;
 
     private List<EntityInfo>? entities;
 
     protected override async Task OnInitializedAsync()
     {
-        entities = await Http.GetFromJsonAsync<List<EntityInfo>>("/api/ef-model");
+        if (Http.BaseAddress is null)
+        {
+            Http = new HttpClient { BaseAddress = new Uri(Nav.BaseUri) };
+        }
+        entities = await Http.GetFromJsonAsync<List<EntityInfo>>("api/ef-model");
     }
 
     private record EntityInfo(string Name, List<PropertyInfo> Properties);
