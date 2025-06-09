@@ -1,0 +1,38 @@
+@page "/inspect"
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Self Inspection</PageTitle>
+
+<h1>Entity Framework Model</h1>
+
+@if (entities is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    @foreach (var entity in entities)
+    {
+        <h3>@entity.Name</h3>
+        <ul>
+            @foreach (var prop in entity.Properties)
+            {
+                <li>@prop.Name (@prop.Type)</li>
+            }
+        </ul>
+    }
+}
+
+@code {
+    [Inject] HttpClient Http { get; set; } = default!;
+
+    private List<EntityInfo>? entities;
+
+    protected override async Task OnInitializedAsync()
+    {
+        entities = await Http.GetFromJsonAsync<List<EntityInfo>>("/api/ef-model");
+    }
+
+    private record EntityInfo(string Name, List<PropertyInfo> Properties);
+    private record PropertyInfo(string Name, string Type);
+}
