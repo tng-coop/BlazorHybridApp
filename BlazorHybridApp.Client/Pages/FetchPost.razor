@@ -1,0 +1,24 @@
+@page "/fetchpost"
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Fetch Post</PageTitle>
+
+<h1>Fetch Post</h1>
+
+<button class="btn btn-primary" @onclick="LoadPost">Load Post</button>
+
+@if(!string.IsNullOrEmpty(postContent))
+{
+    <textarea class="form-control mt-3" rows="20" readonly>@postContent</textarea>
+}
+
+@code {
+    [Inject] HttpClient Http { get; set; } = default!;
+
+    private string? postContent;
+
+    private async Task LoadPost()
+    {
+        postContent = await Http.GetStringAsync("https://workers-coop.com/honbu/kanagawa/wp-json/wp/v2/posts/599");
+    }
+}
