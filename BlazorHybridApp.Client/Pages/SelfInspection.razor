@@ -11,6 +11,7 @@
 }
 else
 {
+    <div id="ef-diagram" style="height:400px" class="mb-4"></div>
     @foreach (var entity in entities)
     {
         <h3>@entity.Name</h3>
@@ -26,6 +27,7 @@ else
 @code {
     [Inject] HttpClient Http { get; set; } = default!;
     [Inject] NavigationManager Nav { get; set; } = default!;
+    [Inject] IJSRuntime JS { get; set; } = default!;
 
     private List<EntityInfo>? entities;
 
@@ -38,6 +40,14 @@ else
         entities = await Http.GetFromJsonAsync<List<EntityInfo>>("api/ef-model");
     }
 
-    private record EntityInfo(string Name, List<PropertyInfo> Properties);
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && entities is not null)
+        {
+            await JS.InvokeVoidAsync("efInspection.render", entities);
+        }
+    }
+    private record EntityInfo(string Name, List<PropertyInfo> Properties, List<NavigationInfo> Navigations);
     private record PropertyInfo(string Name, string Type);
+    private record NavigationInfo(string Name, string Target);
 }

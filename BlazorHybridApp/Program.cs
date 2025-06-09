@@ -158,7 +158,8 @@ app.MapGet("/api/ef-model", (ApplicationDbContext db) =>
     var entities = db.Model.GetEntityTypes().Select(e => new
     {
         Name = e.ClrType.Name,
-        Properties = e.GetProperties().Select(p => new { Name = p.Name, Type = p.ClrType.Name })
+        Properties = e.GetProperties().Select(p => new { Name = p.Name, Type = p.ClrType.Name }),
+        Navigations = e.GetNavigations().Select(n => new { Name = n.Name, Target = n.TargetEntityType.ClrType.Name })
     });
     return Results.Json(entities);
 });
