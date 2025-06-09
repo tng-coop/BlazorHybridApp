@@ -110,6 +110,21 @@ namespace BlazorHybridApp.Migrations
                     b.ToTable("BackgroundVideos");
                 });
 
+            modelBuilder.Entity("BlazorHybridApp.Data.HtmlContent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Html")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HtmlContents");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")

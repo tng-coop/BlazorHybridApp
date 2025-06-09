@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BlazorHybridApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250603090051_InitialCreate")]
+    [Migration("20250609085730_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -111,6 +111,21 @@ namespace BlazorHybridApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BackgroundVideos");
+                });
+
+            modelBuilder.Entity("BlazorHybridApp.Data.HtmlContent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Html")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HtmlContents");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
