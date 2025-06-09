@@ -1,0 +1,76 @@
+@using BlazorHybridApp.Client.Services
+@implements IDisposable
+@inject LocalizationService Localization
+@inject NavigationManager NavigationManager
+@rendermode InteractiveWebAssembly
+
+<div class="dropdown lang-switch">
+    <button class="btn btn-secondary dropdown-toggle" @onclick="ToggleDropdown">
+        🌐 @GetCurrentCultureLabel()
+    </button>
+    <ul class="dropdown-menu @(GetDropdownMenuClass())">
+        <li>
+            <button class="dropdown-item @(GetActiveClass("en"))" @onclick="() => SetLanguage("en")">
+                English @GetCheckmark("en")
+            </button>
+        </li>
+        <li>
+            <button class="dropdown-item @(GetActiveClass("ja"))" @onclick="() => SetLanguage("ja")">
+                日本語 @GetCheckmark("ja")
+            </button>
+        </li>
+    </ul>
+</div>
+
+@code {
+    private bool isDropdownOpen;
+    private bool initialized = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !initialized)
+        {
+            await Localization.LoadCultureAsync();
+            Localization.OnChange += StateHasChanged;
+            initialized = true;
+            StateHasChanged();
+        }
+    }
+
+    private void ToggleDropdown()
+    {
+        isDropdownOpen = !isDropdownOpen;
+    }
+
+    private async Task SetLanguage(string culture)
+    {
+        isDropdownOpen = false;
+        await Localization.SetCultureAsync(culture);
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+
+    private string GetCurrentCultureLabel()
+    {
+        return Localization.CurrentCulture.Name.StartsWith("ja") ? "JA" : "EN";
+    }
+
+    private string GetDropdownMenuClass()
+    {
+        return isDropdownOpen ? "show" : string.Empty;
+    }
+
+    private string GetActiveClass(string culture)
+    {
+        return Localization.CurrentCulture.Name.StartsWith(culture) ? "active" : string.Empty;
+    }
+
+    private string GetCheckmark(string culture)
+    {
+        return Localization.CurrentCulture.Name.StartsWith(culture) ? "✔️" : string.Empty;
+    }
+
+    public void Dispose()
+    {
+        Localization.OnChange -= StateHasChanged;
+    }
+}

@@ -7,5 +7,11 @@ window.localization = {
       return [navigator.language];
     }
     return [];
+  },
+  getPreferredLanguage: function () {
+    return localStorage.getItem('blazorCulture');
+  },
+  setPreferredLanguage: function (culture) {
+    localStorage.setItem('blazorCulture', culture);
   }
 };
